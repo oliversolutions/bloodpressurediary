@@ -22,3 +22,43 @@ fun getBloodPressureDiagnosis(systolic: Int, diastolic: Int) : BloodPressureDiag
         BloodPressureDiagnosis.Hypotension
     }
 }
+
+fun getBloodPressureSystolic(bloodPressureDiagnosis: BloodPressureDiagnosis) : Int {
+    return when (bloodPressureDiagnosis) {
+        BloodPressureDiagnosis.Hypotension -> {
+            89
+        }
+        BloodPressureDiagnosis.Normal -> {
+            120
+        }
+        BloodPressureDiagnosis.Pre -> {
+            130
+        }
+        BloodPressureDiagnosis.Stage1 -> {
+            150
+        }
+        BloodPressureDiagnosis.Stage2 -> {
+            161
+        }
+    }
+}
+
+fun getBloodPressureDiastolic(bloodPressureDiagnosis: BloodPressureDiagnosis) : Int {
+    return when (bloodPressureDiagnosis) {
+        BloodPressureDiagnosis.Hypotension -> {
+            59
+        }
+        BloodPressureDiagnosis.Normal -> {
+            61
+        }
+        BloodPressureDiagnosis.Pre -> {
+            81
+        }
+        BloodPressureDiagnosis.Stage1 -> {
+            91
+        }
+        BloodPressureDiagnosis.Stage2 -> {
+            101
+        }
+    }
+}

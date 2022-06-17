@@ -8,16 +8,14 @@ import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.oliversolutions.dev.bloodpressurediary.App
-import com.oliversolutions.dev.bloodpressurediary.HighPressureFilter
-import com.oliversolutions.dev.bloodpressurediary.R
 import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentMainBinding
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.oliversolutions.dev.bloodpressurediary.*
+import com.oliversolutions.dev.bloodpressurediary.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -43,16 +41,18 @@ class MainFragment : Fragment() {
             bloodPressureGridAdapter = this
         }
         loadAds()
-        binding.highPressureSave.setOnClickListener{ v: View ->
+        binding.highPressureSave.setOnClickListener{
             showAd()
-            v.findNavController().navigate(R.id.action_navigation_home_to_highPressureSaveFragment)
+            mainViewModel.displayEditHighPressure(null)
         }
-        mainViewModel.navigateToSelectedBloodPressure.observe(viewLifecycleOwner, {
-            if ( null != it ) {
-                showAd()
-                this.findNavController().navigate(MainFragmentDirections.actionNavigationHomeToHighPressureEditFragment(it))
-                mainViewModel.displayHighPressureDetailsComplete()
+        mainViewModel.navigateToSelectedBloodPressure.observeOnce(viewLifecycleOwner, {
+            showAd()
+            val labelString = if (it == null)  {
+                getString(R.string.add_new_record_nav)
+            } else {
+                getString(R.string.edit_record)
             }
+            this.findNavController().navigate(MainFragmentDirections.actionNavigationHomeToHighPressureEditFragment(it, labelString))
         })
         setHasOptionsMenu(true)
         observeHighPressureValues()
@@ -170,6 +170,4 @@ class MainFragment : Fragment() {
             binding.progressBar.visibility = View.INVISIBLE
         })
     }
-
-
 }

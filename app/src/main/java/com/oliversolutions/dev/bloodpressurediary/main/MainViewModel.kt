@@ -135,11 +135,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return true
     }
 
-    fun displayEditHighPressure(bloodPressure: BloodPressure) {
+    fun displayEditHighPressure(bloodPressure: BloodPressure?) {
         _navigateToSelectedHighPressure.value = bloodPressure
-    }
-
-    fun displayHighPressureDetailsComplete() {
-        _navigateToSelectedHighPressure.value = null
     }
 }

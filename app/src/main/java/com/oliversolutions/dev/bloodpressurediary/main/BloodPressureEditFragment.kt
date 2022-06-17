@@ -9,18 +9,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.oliversolutions.dev.bloodpressurediary.BloodPressureDiagnosis
-import com.oliversolutions.dev.bloodpressurediary.R
 import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentBloodPressureEditBinding
-import com.oliversolutions.dev.bloodpressurediary.getBloodPressureDiagnosis
 import com.google.android.material.button.MaterialButton
+import com.oliversolutions.dev.bloodpressurediary.*
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 class BloodPressureEditFragment : Fragment() {
-
     private lateinit var binding: FragmentBloodPressureEditBinding
     lateinit var viewModel: BloodPressureEditViewModel
 
@@ -33,18 +30,16 @@ class BloodPressureEditFragment : Fragment() {
            BloodPressureEditFragmentArgs.fromBundle(requireArguments()).bloodPressure, requireActivity().application)
         viewModel = ViewModelProvider(this, viewModelFactory).get(BloodPressureEditViewModel::class.java)
         binding.viewModel = viewModel
-        configureNumberPickers()
-        binding.creationDate.showSoftInputOnFocus = false
-        binding.creationTime.showSoftInputOnFocus = false
-        binding.creationTime.setOnClickListener{ showTimePickerDialog() }
-        binding.timeImageView.setOnClickListener{ showTimePickerDialog() }
-        binding.creationDate.setOnClickListener{ showDatePickerDialog() }
-        binding.dateImageView.setOnClickListener{ showDatePickerDialog() }
+        configureLayout()
+        return binding.root
+    }
 
+    private fun configureLayout() {
+        configureNumberPickers()
+        configureDateInput()
         binding.diagnosisLinearlayout.setOnClickListener {
             BloodPressureTypesDialogFragment().show(childFragmentManager, BloodPressureTypesDialogFragment.TAG)
         }
-
         viewModel.systolic.observe(viewLifecycleOwner, {
             setHighPressureDiagnose()
         })
@@ -53,8 +48,15 @@ class BloodPressureEditFragment : Fragment() {
         })
         setHasOptionsMenu(true)
         configureDiagnosisButtons()
+    }
 
-        return binding.root
+    private fun configureDateInput() {
+        binding.creationDate.showSoftInputOnFocus = false
+        binding.creationTime.showSoftInputOnFocus = false
+        binding.creationTime.setOnClickListener{ showTimePickerDialog() }
+        binding.timeImageView.setOnClickListener{ showTimePickerDialog() }
+        binding.creationDate.setOnClickListener{ showDatePickerDialog() }
+        binding.dateImageView.setOnClickListener{ showDatePickerDialog() }
     }
 
     private fun configureDiagnosisButtons() {
@@ -64,8 +66,8 @@ class BloodPressureEditFragment : Fragment() {
         val stage1Button = binding.stage1Button
         val stage2Button = binding.stage2Button
         hypotensionButton.setOnClickListener {
-            viewModel.systolic.value = 89
-            viewModel.diastolic.value = 59
+            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Hypotension)
+            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Hypotension)
             binding.diagnosisTitle.text = getString(R.string.hypotension_title)
             binding.diagnosisValue.text = getString(R.string.hypotension_value)
             setBorder(hypotensionButton)
@@ -75,8 +77,8 @@ class BloodPressureEditFragment : Fragment() {
             removeBorder(stage2Button)
         }
         normalButton.setOnClickListener {
-            viewModel.systolic.value = 120
-            viewModel.diastolic.value = 61
+            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Normal)
+            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Normal)
             binding.diagnosisTitle.text = getString(R.string.normal_title)
             binding.diagnosisValue.text = getString(R.string.normal_value)
             setBorder(normalButton)
@@ -86,8 +88,8 @@ class BloodPressureEditFragment : Fragment() {
             removeBorder(stage2Button)
         }
         preHypertensionButton.setOnClickListener {
-            viewModel.systolic.value = 130
-            viewModel.diastolic.value = 81
+            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Pre)
+            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Pre)
             binding.diagnosisTitle.text = getString(R.string.prehypertension_title)
             binding.diagnosisValue.text = getString(R.string.prehypertension_value)
             setBorder(preHypertensionButton)
@@ -98,8 +100,8 @@ class BloodPressureEditFragment : Fragment() {
         }
 
         stage1Button.setOnClickListener {
-            viewModel.systolic.value = 150
-            viewModel.diastolic.value = 91
+            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Stage1)
+            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Stage1)
             binding.diagnosisTitle.text = getString(R.string.stage_1_title)
             binding.diagnosisValue.text = getString(R.string.stage_1_value)
             setBorder(stage1Button)
@@ -109,8 +111,8 @@ class BloodPressureEditFragment : Fragment() {
             removeBorder(stage2Button)
         }
         stage2Button.setOnClickListener {
-            viewModel.systolic.value = 161
-            binding.diastolic.value = 101
+            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Stage2)
+            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Stage2)
             binding.diagnosisTitle.text = getString(R.string.stage_2_title)
             binding.diagnosisValue.text = getString(R.string.stage_2_value)
             setBorder(stage2Button)
@@ -204,12 +206,15 @@ class BloodPressureEditFragment : Fragment() {
                 setBorder(hypotensionButton)
             }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.edit_record_menu, menu)
+        if (viewModel.insertMode) {
+            inflater.inflate(R.menu.add_new_record_menu, menu)
+        } else {
+            inflater.inflate(R.menu.edit_record_menu, menu)
+        }
     }
 
     private fun showTimePickerDialog() {
@@ -246,9 +251,23 @@ class BloodPressureEditFragment : Fragment() {
             R.id.edit_record -> {
                 viewModel.editHighPressure()
             }
+            R.id.add_new_record -> {
+                val startDate = viewModel.creationDate.value
+                val startTime = viewModel.creationTime.value
+                val highPressure = BloodPressure(
+                    viewModel.systolic.value?.toDouble(),
+                    viewModel.diastolic.value?.toDouble(),
+                    viewModel.pulse.value?.toDouble(),
+                    viewModel.notes.value,
+                    startTime,
+                    startDate,
+                    null,
+                    null,
+                    null)
+                viewModel.saveHighPressure(highPressure)
+            }
         }
         this.findNavController().navigate(R.id.action_highPressureEditFragment_to_navigation_home)
         return true
     }
-
 }

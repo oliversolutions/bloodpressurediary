@@ -9,9 +9,6 @@
         android:name="com.oliversolutions.dev.bloodpressurediary.main.MainFragment"
         android:label="@string/blood_pressure_diary">
         <action
-            android:id="@+id/action_navigation_home_to_highPressureSaveFragment"
-            app:destination="@id/bloodPressureSaveFragment" />
-        <action
             android:id="@+id/action_navigation_home_to_highPressureEditFragment"
             app:destination="@id/bloodPressureEditFragment" />
     </fragment>
@@ -28,20 +25,16 @@
             app:destination="@id/dataFragment" />
     </fragment>
     <fragment
-        android:id="@+id/bloodPressureSaveFragment"
-        android:name="com.oliversolutions.dev.bloodpressurediary.main.BloodPressureSaveFragment"
-        android:label="@string/add_new_record_nav">
-        <action
-            android:id="@+id/action_highPressureSaveFragment_to_navigation_home"
-            app:destination="@id/navigation_home" />
-    </fragment>
-    <fragment
         android:id="@+id/bloodPressureEditFragment"
         android:name="com.oliversolutions.dev.bloodpressurediary.main.BloodPressureEditFragment"
-        android:label="@string/edit_record">
+        android:label="{label}">
         <argument
             android:name="bloodPressure"
-            app:argType="com.oliversolutions.dev.bloodpressurediary.BloodPressure" />
+            app:argType="com.oliversolutions.dev.bloodpressurediary.BloodPressure"
+            app:nullable="true" />
+        <argument
+            android:name="label"
+            app:argType="string" />
         <action
             android:id="@+id/action_highPressureEditFragment_to_navigation_home"
             app:destination="@id/navigation_home" />
