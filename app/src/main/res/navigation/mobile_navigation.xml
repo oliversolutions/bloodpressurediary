@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.oliversolutions.dev.bloodpressurediary.main.MainFragment"
+        android:label="@string/blood_pressure_diary">
+        <action
+            android:id="@+id/action_navigation_home_to_highPressureSaveFragment"
+            app:destination="@id/bloodPressureSaveFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_highPressureEditFragment"
+            app:destination="@id/bloodPressureEditFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.oliversolutions.dev.bloodpressurediary.settings.SettingsFragment"
+        android:label="@string/title_settings">
+        <action
+            android:id="@+id/action_navigation_notifications_to_notificationsFragment"
+            app:destination="@id/remindersFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_to_dataFragment"
+            app:destination="@id/dataFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bloodPressureSaveFragment"
+        android:name="com.oliversolutions.dev.bloodpressurediary.main.BloodPressureSaveFragment"
+        android:label="@string/add_new_record_nav">
+        <action
+            android:id="@+id/action_highPressureSaveFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/bloodPressureEditFragment"
+        android:name="com.oliversolutions.dev.bloodpressurediary.main.BloodPressureEditFragment"
+        android:label="@string/edit_record">
+        <argument
+            android:name="bloodPressure"
+            app:argType="com.oliversolutions.dev.bloodpressurediary.BloodPressure" />
+        <action
+            android:id="@+id/action_highPressureEditFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/remindersFragment"
+        android:name="com.oliversolutions.dev.bloodpressurediary.settings.RemindersFragment"
+        android:label="@string/reminders_title">
+        <action
+            android:id="@+id/action_notificationsFragment_to_navigation_notifications"
+            app:destination="@id/navigation_settings" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_statistics"
+        android:name="com.oliversolutions.dev.bloodpressurediary.statistics.StatisticFragment"
+        android:label="@string/statistics" />
+    <fragment
+        android:id="@+id/dataFragment"
+        android:name="com.oliversolutions.dev.bloodpressurediary.settings.DataFragment"
+        android:label="@string/data" />
+</navigation>

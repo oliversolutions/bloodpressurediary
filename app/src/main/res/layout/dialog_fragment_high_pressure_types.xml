@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/table_layout_margin"
+        android:stretchColumns="*"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/type_column_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/type_column_name_text_value"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/systolic_column_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/systolic_column_name_text_value"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/diastolic_column_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/diastolic_column_name_text_value"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/stage_2_button_row"
+                android:layout_width="@dimen/stage_2_button_row_layout_width"
+                android:layout_height="@dimen/stage_2_button_row_layout_height"
+                app:backgroundTint="@android:color/holo_red_light" />
+
+            <TextView
+                android:id="@+id/stage_2_type_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/stage_2_type_row_margin_start"
+                android:text="@string/stage_2_type_row_text_value" />
+
+            <TextView
+                android:id="@+id/stage_2_systolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stage_2_systolic_row_text_value" />
+
+            <TextView
+                android:id="@+id/stage_2_diastolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stage_2_diastolic_row_text_value" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/stage_1_button_row"
+                android:layout_width="@dimen/stage_1_button_row_layout_width"
+                android:layout_height="@dimen/stage_1_button_row_layout_height"
+                app:backgroundTint="@android:color/holo_orange_dark" />
+
+            <TextView
+                android:id="@+id/stage_1_type_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/stage_1_type_row_margin_start"
+                android:text="@string/stage_1_type_row_text_value" />
+
+            <TextView
+                android:id="@+id/stage_1_systolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stage_1_systolic_row_text_value" />
+
+            <TextView
+                android:id="@+id/stage_1_diastolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stage_1_diastolic_row_text_value" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/prehypertension_button_row"
+                android:layout_width="@dimen/prehypertension_button_row_layout_width"
+                android:layout_height="@dimen/prehypertension_button_row_layout_height"
+                app:backgroundTint="@android:color/holo_orange_light" />
+
+            <TextView
+                android:id="@+id/prehypertension_type_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/prehypertension_type_row_margin_start"
+                android:text="@string/prehypertension_title" />
+
+            <TextView
+                android:id="@+id/prehypertension_systolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/prehypertension_systolic_row_text_value" />
+
+            <TextView
+                android:id="@+id/prehypertension_diastolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/prehypertension_diastolic_row_text_value" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/normal_button_row"
+                android:layout_width="@dimen/normal_button_row_layout_width"
+                android:layout_height="@dimen/normal_button_row_layout_height"
+                app:backgroundTint="@android:color/holo_green_light" />
+
+            <TextView
+                android:id="@+id/normal_type_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/normal_type_row_margin_start"
+                android:text="@string/normal_title" />
+
+            <TextView
+                android:id="@+id/normal_systolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/normal_systolic_row_text_value" />
+
+            <TextView
+                android:id="@+id/normal_diastolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/normal_diastolic_row_text_value" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/hypotension_button_row"
+                android:layout_width="@dimen/hypotension_button_row_layout_width"
+                android:layout_height="@dimen/hypotension_button_row_layout_height"
+                app:backgroundTint="@android:color/holo_blue_light" />
+
+            <TextView
+                android:id="@+id/hypotension_type_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/hypotension_type_row_margin_start"
+                android:text="@string/hypotension_title" />
+
+            <TextView
+                android:id="@+id/hypotension_systolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hypotension_systolic_row_text_value" />
+
+            <TextView
+                android:id="@+id/hypotension_diastolic_row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hypotension_diastolic_row_text_value" />
+        </TableRow>
+    </TableLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

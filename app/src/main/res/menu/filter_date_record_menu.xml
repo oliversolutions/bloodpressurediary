@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/filter_date_record"
+        android:orderInCategory="100"
+        android:title=""
+        android:icon="@drawable/ic_date"
+        app:showAsAction="always">
+
+        <menu>
+
+            <item
+                android:id="@+id/all_records"
+                android:title="@string/all_time" />
+            <item
+                android:id="@+id/today"
+                android:title="@string/today" />
+
+            <item
+                android:id="@+id/yesterday"
+                android:title="@string/yesterday" />
+            <item
+                android:id="@+id/last_7_days"
+                android:title="@string/last_7_days" />
+            <item
+                android:id="@+id/last_14_days"
+                android:title="@string/last_14_days" />
+            <item
+                android:id="@+id/last_30_days"
+                android:title="@string/last_30_days" />
+            <item
+                android:id="@+id/last_60_days"
+                android:title="@string/last_60_days" />
+            <item
+                android:id="@+id/last_90_days"
+                android:title="@string/last_90_days" />
+
+            <item
+                android:id="@+id/custom"
+                android:title="@string/custom" />
+
+        </menu>
+
+    </item>
+
+</menu>
