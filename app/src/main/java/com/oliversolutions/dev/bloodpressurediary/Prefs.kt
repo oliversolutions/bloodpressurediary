@@ -53,6 +53,16 @@ class Prefs (context: Context) {
     private val toDatePrefs: SharedPreferences = context.getSharedPreferences(PREFS_TO_DATE, 0)
     private val isLaunchedPrefs: SharedPreferences = context.getSharedPreferences(PREFS_IS_LAUNCHED, 0)
 
+    private val PREFS_RATE_US_IS_LAUNCHED = "PREFS_RATE_US_IS_LAUNCHED"
+    private val SHARED_RATE_US_IS_LAUNCHED = "SHARED_RATE_US_IS_LAUNCHED"
+
+    private val rateUsIsLaunchedPrefs: SharedPreferences = context.getSharedPreferences(PREFS_RATE_US_IS_LAUNCHED, 0)
+
+
+    var rateUsIsLaunched: Boolean
+        get() = rateUsIsLaunchedPrefs.getBoolean(SHARED_RATE_US_IS_LAUNCHED, false)
+        set(value) = rateUsIsLaunchedPrefs.edit().putBoolean(SHARED_RATE_US_IS_LAUNCHED, value).apply()
+
 
     var sendMeasurementReminder: Boolean
         get() = measurementReminderPrefs.getBoolean(SHARED_MEASUREMENT_REMINDER, false)

@@ -102,4 +102,7 @@
     <string name="max">Max</string>
     <string name="min">Min</string>
     <string name="average">Promedio</string>
+    <string name="opinion_matters">Tu opinión nos importa!</string>
+    <string name="we_work_hard">Trabajamos muy duro para ofrecerte lo mejor y nos gustaría saber que opinas de nuestro trabajo</string>
+    <string name="rate_us_button">Califícanos</string>
 </resources>

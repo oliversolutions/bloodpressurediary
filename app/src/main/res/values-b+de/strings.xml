@@ -102,4 +102,7 @@
     <string name="max">Max</string>
     <string name="min">Min</string>
     <string name="average">Durchschn.</string>
+    <string name="opinion_matters">Ihre Meinung zählt für uns!</string>
+    <string name="we_work_hard">Wir arbeiten hart daran, Ihnen einen besseren Service zu bieten und würden gerne wissen, wie Sie unsere App bewerten.</string>
+    <string name="rate_us_button">Bewerten Sie uns</string>
 </resources>
