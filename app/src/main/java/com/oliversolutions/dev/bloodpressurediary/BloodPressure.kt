@@ -16,7 +16,7 @@ data class BloodPressure(
     val averagePulse: String?,
     val id: Long = 0) : Parcelable
 
-enum class HighPressureFilter(val value: String) {
+enum class BloodPressureFilter(val value: String) {
     SHOW_ALL("show_all"),
     SHOW_TODAY("show_today"),
     SHOW_YESTERDAY("show_yesterday"),

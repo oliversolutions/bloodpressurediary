@@ -35,15 +35,15 @@ class MainFragment : Fragment() {
         binding.progressBar.visibility = View.VISIBLE
         binding.lifecycleOwner = this
         binding.viewModel = mainViewModel
-        binding.highPressureRecycler.adapter = BloodPressureGridAdapter(BloodPressureGridAdapter.OnClickListener {
-            mainViewModel.displayEditHighPressure(it)
+        binding.bloodPressureRecycler.adapter = BloodPressureGridAdapter(BloodPressureGridAdapter.OnClickListener {
+            mainViewModel.displayEditBloodPressure(it)
         }).apply {
             bloodPressureGridAdapter = this
         }
         loadAds()
-        binding.highPressureSave.setOnClickListener{
+        binding.bloodPressureSave.setOnClickListener{
             showAd()
-            mainViewModel.displayEditHighPressure(null)
+            mainViewModel.displayEditBloodPressure(null)
         }
         mainViewModel.navigateToSelectedBloodPressure.observeOnce(viewLifecycleOwner, {
             showAd()
@@ -55,7 +55,7 @@ class MainFragment : Fragment() {
             this.findNavController().navigate(MainFragmentDirections.actionNavigationHomeToHighPressureEditFragment(it, labelString))
         })
         setHasOptionsMenu(true)
-        observeHighPressureValues()
+        observeBloodPressureValues()
         return binding.root
     }
 
@@ -100,8 +100,8 @@ class MainFragment : Fragment() {
                 val selectedFromDate = formatter.format(calendar.time)
                 calendar.timeInMillis = it.second
                 val selectedToDate = formatter.format(calendar.time)
-                mainViewModel.updateFilter(HighPressureFilter.SHOW_CUSTOM, selectedFromDate, selectedToDate)
-                observeHighPressureValues()
+                mainViewModel.updateFilter(BloodPressureFilter.SHOW_CUSTOM, selectedFromDate, selectedToDate)
+                observeBloodPressureValues()
             }
             return true
         } else {
@@ -109,46 +109,46 @@ class MainFragment : Fragment() {
                 when (item.itemId) {
                     R.id.all_records -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        HighPressureFilter.SHOW_ALL
+                        BloodPressureFilter.SHOW_ALL
                     }
                     R.id.today -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        HighPressureFilter.SHOW_TODAY
+                        BloodPressureFilter.SHOW_TODAY
                     }
                     R.id.yesterday -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        HighPressureFilter.SHOW_YESTERDAY
+                        BloodPressureFilter.SHOW_YESTERDAY
                     }
                     R.id.last_7_days -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        HighPressureFilter.SHOW_LAST_7_DAYS
+                        BloodPressureFilter.SHOW_LAST_7_DAYS
                     }
                     R.id.last_14_days -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        HighPressureFilter.SHOW_LAST_14_DAYS
+                        BloodPressureFilter.SHOW_LAST_14_DAYS
                     }
                     R.id.last_30_days -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        HighPressureFilter.SHOW_LAST_30_DAYS
+                        BloodPressureFilter.SHOW_LAST_30_DAYS
                     }
                     R.id.last_60_days -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        HighPressureFilter.SHOW_LAST_60_DAYS
+                        BloodPressureFilter.SHOW_LAST_60_DAYS
                     }
                     R.id.last_90_days -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        HighPressureFilter.SHOW_LAST_90_DAYS
+                        BloodPressureFilter.SHOW_LAST_90_DAYS
                     }
 
                     else -> return false
                 }
             )
-            observeHighPressureValues()
+            observeBloodPressureValues()
             return true
         }
     }
 
-    private fun observeHighPressureValues() {
+    private fun observeBloodPressureValues() {
         mainViewModel.bloodPressureValues.observe(viewLifecycleOwner, {
             if (it.isEmpty()) {
                 binding.noDataFoundLayout.visibility = View.VISIBLE

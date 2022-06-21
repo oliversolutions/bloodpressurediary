@@ -120,60 +120,60 @@ class StatisticViewModel(application: Application) : AndroidViewModel(applicatio
             )
     }
 
-    fun updateFilter(filter: HighPressureFilter, selectedFromDate: String? = null, selectedToDate: String? = null) : Boolean {
+    fun updateFilter(filter: BloodPressureFilter, selectedFromDate: String? = null, selectedToDate: String? = null) : Boolean {
         val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         val cal = Calendar.getInstance()
         cal.add(Calendar.DATE, 0)
         val today = dateFormat.format(cal.time)
 
         when (filter) {
-            HighPressureFilter.SHOW_ALL -> {
+            BloodPressureFilter.SHOW_ALL -> {
                 setAllRecords()
                 fromDate = ""
                 toDate = ""
                 return true
             }
-            HighPressureFilter.SHOW_TODAY -> {
+            BloodPressureFilter.SHOW_TODAY -> {
                 fromDate = today
                 toDate = today
             }
-            HighPressureFilter.SHOW_YESTERDAY -> {
+            BloodPressureFilter.SHOW_YESTERDAY -> {
                 cal.add(Calendar.DATE, -1)
                 val yesterday = dateFormat.format(cal.time)
                 fromDate = yesterday
                 toDate = yesterday
             }
-            HighPressureFilter.SHOW_LAST_7_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_7_DAYS -> {
                 cal.add(Calendar.DATE, -7)
                 val sevenDaysBefore = dateFormat.format(cal.time)
                 fromDate = sevenDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_LAST_14_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_14_DAYS -> {
                 cal.add(Calendar.DATE, -14)
                 val fourteenDaysBefore = dateFormat.format(cal.time)
                 fromDate = fourteenDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_LAST_30_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_30_DAYS -> {
                 cal.add(Calendar.DATE, -30)
                 val thirtyDaysBefore = dateFormat.format(cal.time)
                 fromDate = thirtyDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_LAST_60_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_60_DAYS -> {
                 cal.add(Calendar.DATE, -60)
                 val sixtyDaysBefore = dateFormat.format(cal.time)
                 fromDate = sixtyDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_LAST_90_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_90_DAYS -> {
                 cal.add(Calendar.DATE, -90)
                 val ninetyDaysBefore = dateFormat.format(cal.time)
                 fromDate = ninetyDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_CUSTOM -> {
+            BloodPressureFilter.SHOW_CUSTOM -> {
                 fromDate = selectedFromDate!!
                 toDate = selectedToDate!!
             }

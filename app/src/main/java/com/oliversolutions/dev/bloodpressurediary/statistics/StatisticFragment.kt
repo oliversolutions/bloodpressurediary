@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.oliversolutions.dev.bloodpressurediary.App
-import com.oliversolutions.dev.bloodpressurediary.HighPressureFilter
+import com.oliversolutions.dev.bloodpressurediary.BloodPressureFilter
 import com.oliversolutions.dev.bloodpressurediary.R
 import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentStatisticBinding
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -205,7 +205,7 @@ class StatisticFragment : Fragment() {
                 calendar.timeInMillis = it.second
                 val selectedToDate = formatter.format(calendar.time)
                 viewModel.updateFilter(
-                    HighPressureFilter.SHOW_CUSTOM,
+                    BloodPressureFilter.SHOW_CUSTOM,
                     selectedFromDate,
                     selectedToDate
                 )
@@ -216,28 +216,28 @@ class StatisticFragment : Fragment() {
             viewModel.updateFilter(
                 when (item.itemId) {
                     R.id.all_records -> {
-                        HighPressureFilter.SHOW_ALL
+                        BloodPressureFilter.SHOW_ALL
                     }
                     R.id.today -> {
-                        HighPressureFilter.SHOW_TODAY
+                        BloodPressureFilter.SHOW_TODAY
                     }
                     R.id.yesterday -> {
-                        HighPressureFilter.SHOW_YESTERDAY
+                        BloodPressureFilter.SHOW_YESTERDAY
                     }
                     R.id.last_7_days -> {
-                        HighPressureFilter.SHOW_LAST_7_DAYS
+                        BloodPressureFilter.SHOW_LAST_7_DAYS
                     }
                     R.id.last_14_days -> {
-                        HighPressureFilter.SHOW_LAST_14_DAYS
+                        BloodPressureFilter.SHOW_LAST_14_DAYS
                     }
                     R.id.last_30_days -> {
-                        HighPressureFilter.SHOW_LAST_30_DAYS
+                        BloodPressureFilter.SHOW_LAST_30_DAYS
                     }
                     R.id.last_60_days -> {
-                        HighPressureFilter.SHOW_LAST_60_DAYS
+                        BloodPressureFilter.SHOW_LAST_60_DAYS
                     }
                     R.id.last_90_days -> {
-                        HighPressureFilter.SHOW_LAST_90_DAYS
+                        BloodPressureFilter.SHOW_LAST_90_DAYS
                     }
                     else -> return false
                 }

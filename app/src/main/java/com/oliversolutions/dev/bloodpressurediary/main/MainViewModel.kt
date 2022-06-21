@@ -7,7 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.oliversolutions.dev.bloodpressurediary.App
 import com.oliversolutions.dev.bloodpressurediary.BloodPressure
-import com.oliversolutions.dev.bloodpressurediary.HighPressureFilter
+import com.oliversolutions.dev.bloodpressurediary.BloodPressureFilter
 import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDatabase
 import com.oliversolutions.dev.bloodpressurediary.database.asDomainModel
 import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureRepository
@@ -23,13 +23,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var fromDate  = ""
     var toDate  = ""
 
-    private val _navigateToSelectedHighPressure = MutableLiveData<BloodPressure?>()
+    private val _navigateToSelectedBloodPressure = MutableLiveData<BloodPressure?>()
 
     val navigateToSelectedBloodPressure: LiveData<BloodPressure?>
-        get() = _navigateToSelectedHighPressure
+        get() = _navigateToSelectedBloodPressure
 
     private val database = BloodPressureDatabase.getInstance(application)
-    private val highPressureRepository = BloodPressureRepository(database)
+    private val bloodPressureRepository = BloodPressureRepository(database)
 
     init {
         if (App.prefs.fromDate != null && App.prefs.toDate != null) {
@@ -47,12 +47,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
         bloodPressureValues = when (fromDate.isBlank() || toDate.isBlank()) {
             true -> {
-                Transformations.map(highPressureRepository.getAllRecords()) {
+                Transformations.map(bloodPressureRepository.getAllRecords()) {
                     it.asDomainModel()
                 }
             }
             false -> {
-                Transformations.map(highPressureRepository.getRecordsByDate(fromDate, toDate)) {
+                Transformations.map(bloodPressureRepository.getRecordsByDate(fromDate, toDate)) {
                     it.asDomainModel()
                 }
             }
@@ -61,70 +61,70 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun setAllRecords() {
-        bloodPressureValues = Transformations.map(highPressureRepository.getAllRecords()) {
+        bloodPressureValues = Transformations.map(bloodPressureRepository.getAllRecords()) {
             it.asDomainModel()
         }
     }
 
     private fun setRecordsByDate(fromDate: String, toDate: String) {
-        bloodPressureValues = Transformations.map(highPressureRepository.getRecordsByDate(fromDate, toDate)) {
+        bloodPressureValues = Transformations.map(bloodPressureRepository.getRecordsByDate(fromDate, toDate)) {
             it.asDomainModel()
         }
     }
 
-    fun updateFilter(filter: HighPressureFilter, selectedFromDate: String? = null, selectedToDate: String? = null) : Boolean {
+    fun updateFilter(filter: BloodPressureFilter, selectedFromDate: String? = null, selectedToDate: String? = null) : Boolean {
         val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         val cal = Calendar.getInstance()
         cal.add(Calendar.DATE, 0)
         val today = dateFormat.format(cal.time)
         when (filter) {
-            HighPressureFilter.SHOW_ALL -> {
+            BloodPressureFilter.SHOW_ALL -> {
                 setAllRecords()
                 fromDate = ""
                 toDate = ""
                 return true
             }
-            HighPressureFilter.SHOW_TODAY -> {
+            BloodPressureFilter.SHOW_TODAY -> {
                 fromDate = today
                 toDate = today
             }
-            HighPressureFilter.SHOW_YESTERDAY -> {
+            BloodPressureFilter.SHOW_YESTERDAY -> {
                 cal.add(Calendar.DATE, -1)
                 val yesterday = dateFormat.format(cal.time)
                 fromDate = yesterday
                 toDate = yesterday
             }
-            HighPressureFilter.SHOW_LAST_7_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_7_DAYS -> {
                 cal.add(Calendar.DATE, -7)
                 val sevenDaysBefore = dateFormat.format(cal.time)
                 fromDate = sevenDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_LAST_14_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_14_DAYS -> {
                 cal.add(Calendar.DATE, -14)
                 val fourteenDaysBefore = dateFormat.format(cal.time)
                 fromDate = fourteenDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_LAST_30_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_30_DAYS -> {
                 cal.add(Calendar.DATE, -30)
                 val thirtyDaysBefore = dateFormat.format(cal.time)
                 fromDate = thirtyDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_LAST_60_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_60_DAYS -> {
                 cal.add(Calendar.DATE, -60)
                 val sixtyDaysBefore = dateFormat.format(cal.time)
                 fromDate = sixtyDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_LAST_90_DAYS -> {
+            BloodPressureFilter.SHOW_LAST_90_DAYS -> {
                 cal.add(Calendar.DATE, -90)
                 val ninetyDaysBefore = dateFormat.format(cal.time)
                 fromDate = ninetyDaysBefore
                 toDate = today
             }
-            HighPressureFilter.SHOW_CUSTOM -> {
+            BloodPressureFilter.SHOW_CUSTOM -> {
                 fromDate = selectedFromDate!!
                 toDate = selectedToDate!!
             }
@@ -135,7 +135,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return true
     }
 
-    fun displayEditHighPressure(bloodPressure: BloodPressure?) {
-        _navigateToSelectedHighPressure.value = bloodPressure
+    fun displayEditBloodPressure(bloodPressure: BloodPressure?) {
+        _navigateToSelectedBloodPressure.value = bloodPressure
     }
 }
