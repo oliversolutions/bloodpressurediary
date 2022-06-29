@@ -16,6 +16,9 @@ import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentMainBindin
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.oliversolutions.dev.bloodpressurediary.*
 import com.oliversolutions.dev.bloodpressurediary.R
+import com.oliversolutions.dev.bloodpressurediary.settings.DataViewModel
+import com.oliversolutions.dev.bloodpressurediary.statistics.StatisticViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,9 +28,7 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private var mInterstitialAd: InterstitialAd? = null
 
-    private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
-    }
+    val mainViewModel: MainViewModel by viewModel()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

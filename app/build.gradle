@@ -102,4 +102,9 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
     implementation "androidx.work:work-runtime-ktx:2.7.1"
+
+    //Koin
+    implementation "org.koin:koin-android:$koinVersion"
+    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
+
 }

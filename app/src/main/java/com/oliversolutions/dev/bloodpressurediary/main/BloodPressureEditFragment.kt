@@ -12,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentBloodPressureEditBinding
 import com.google.android.material.button.MaterialButton
 import com.oliversolutions.dev.bloodpressurediary.*
+import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureRepository
+import org.koin.android.ext.android.get
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -27,7 +29,8 @@ class BloodPressureEditFragment : Fragment() {
         )
         binding.lifecycleOwner = this
         val viewModelFactory = BloodPressureEditViewModelFactory(
-           BloodPressureEditFragmentArgs.fromBundle(requireArguments()).bloodPressure, requireActivity().application)
+           BloodPressureEditFragmentArgs.fromBundle(requireArguments()).bloodPressure, requireActivity().application, BloodPressureRepository(get())
+        )
         viewModel = ViewModelProvider(this, viewModelFactory).get(BloodPressureEditViewModel::class.java)
         binding.viewModel = viewModel
         configureLayout()

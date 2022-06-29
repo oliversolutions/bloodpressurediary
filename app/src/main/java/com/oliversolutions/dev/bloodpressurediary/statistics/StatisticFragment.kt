@@ -12,10 +12,12 @@ import com.oliversolutions.dev.bloodpressurediary.BloodPressureFilter
 import com.oliversolutions.dev.bloodpressurediary.R
 import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentStatisticBinding
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.oliversolutions.dev.bloodpressurediary.settings.DataViewModel
 import ir.androidexception.datatable.model.DataTableHeader
 import ir.androidexception.datatable.model.DataTableRow
 import ir.mahozad.android.PieChart
 import ir.mahozad.android.unit.Dimension
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -27,9 +29,7 @@ import java.util.*
 class StatisticFragment : Fragment() {
 
     private lateinit var binding: FragmentStatisticBinding
-    val viewModel: StatisticViewModel by lazy {
-        ViewModelProvider(this).get(StatisticViewModel::class.java)
-    }
+    val viewModel: StatisticViewModel by viewModel()
 
     fun loadPieChart() {
         val pieChart = binding.pieChart

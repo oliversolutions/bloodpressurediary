@@ -17,7 +17,7 @@ import java.util.*
 
 @SuppressLint("SimpleDateFormat")
 @RequiresApi(Build.VERSION_CODES.O)
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel(application: Application, private val bloodPressureRepository: BloodPressureRepository) : AndroidViewModel(application) {
 
     var bloodPressureValues: LiveData<List<BloodPressure>>
     var fromDate  = ""
@@ -27,9 +27,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val navigateToSelectedBloodPressure: LiveData<BloodPressure?>
         get() = _navigateToSelectedBloodPressure
-
-    private val database = BloodPressureDatabase.getInstance(application)
-    private val bloodPressureRepository = BloodPressureRepository(database)
 
     init {
         if (App.prefs.fromDate != null && App.prefs.toDate != null) {

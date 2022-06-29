@@ -15,13 +15,13 @@ import com.oliversolutions.dev.bloodpressurediary.main.TimePickerFragment
 import com.oliversolutions.dev.bloodpressurediary.work.MeasurementReminderWorker
 import com.oliversolutions.dev.bloodpressurediary.work.MedicationReminderWorker
 import com.oliversolutions.dev.bloodpressurediary.work.RecurringWork
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RemindersFragment : Fragment() {
 
     private lateinit var binding: FragmentRemindersBinding
-    private val mainViewModel: RemindersViewModel by lazy {
-        ViewModelProvider(this).get(RemindersViewModel::class.java)
-    }
+    val mainViewModel: RemindersViewModel by viewModel()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 

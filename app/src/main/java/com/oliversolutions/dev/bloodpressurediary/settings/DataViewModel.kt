@@ -7,10 +7,7 @@ import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDatabase
 import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureRepository
 import kotlinx.coroutines.launch
 
-class DataViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val database = BloodPressureDatabase.getInstance(application)
-    private val highPressureRepository = BloodPressureRepository(database)
+class DataViewModel(application: Application, private val highPressureRepository: BloodPressureRepository) : AndroidViewModel(application) {
 
     fun clear() {
         viewModelScope.launch {

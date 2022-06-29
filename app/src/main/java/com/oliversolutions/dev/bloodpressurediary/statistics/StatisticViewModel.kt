@@ -17,10 +17,9 @@ import java.util.*
 
 @SuppressLint("SimpleDateFormat")
 @RequiresApi(Build.VERSION_CODES.O)
-class StatisticViewModel(application: Application) : AndroidViewModel(application) {
+class StatisticViewModel(application: Application, private val highPressureRepository: BloodPressureRepository) : AndroidViewModel(application) {
+
     var bloodPressureStatisticData = BloodPressureStatistic()
-    private val database = BloodPressureDatabase.getInstance(application)
-    private val highPressureRepository = BloodPressureRepository(database)
     var bloodPressureValues: LiveData<List<BloodPressure>>
     var fromDate  = ""
     var toDate  = ""

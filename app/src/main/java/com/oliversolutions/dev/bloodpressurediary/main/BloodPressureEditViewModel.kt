@@ -19,7 +19,7 @@ const val DEFAULT_SYSTOLIC = 120
 const val DEFAULT_DIASTOLIC = 65
 const val DEFAULT_PULSE = 60
 
-class BloodPressureEditViewModel(bloodPressure: BloodPressure?, application: Application) : AndroidViewModel(application) {
+class BloodPressureEditViewModel(bloodPressure: BloodPressure?, application: Application, private val highPressureRepository: BloodPressureRepository) : AndroidViewModel(application) {
 
     val systolic = MutableLiveData(DEFAULT_SYSTOLIC)
     val diastolic = MutableLiveData(DEFAULT_DIASTOLIC)
@@ -41,8 +41,6 @@ class BloodPressureEditViewModel(bloodPressure: BloodPressure?, application: App
         }
     )
     private var highPressureId: Long = 0
-    private val database = BloodPressureDatabase.getInstance(application)
-    private val highPressureRepository = BloodPressureRepository(database)
 
     init {
         if (bloodPressure != null) {

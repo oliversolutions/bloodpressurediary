@@ -27,12 +27,12 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import android.Manifest
 import androidx.core.content.ContextCompat.checkSelfPermission
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DataFragment : Fragment() {
     private lateinit var binding: FragmentDataBinding
-    val viewModel: DataViewModel by lazy {
-        ViewModelProvider(this).get(DataViewModel::class.java)
-    }
+    val viewModel: DataViewModel by viewModel()
+
     val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
