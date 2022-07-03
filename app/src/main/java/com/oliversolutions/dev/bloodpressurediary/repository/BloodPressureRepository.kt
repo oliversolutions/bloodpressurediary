@@ -1,35 +1,67 @@
 package com.oliversolutions.dev.bloodpressurediary.repository
 
-import androidx.lifecycle.LiveData
 import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDTO
 import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDatabase
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import com.oliversolutions.dev.bloodpressurediary.utils.Result
+import com.oliversolutions.dev.bloodpressurediary.utils.wrapEspressoIdlingResource
 
-class BloodPressureRepository(private val database: BloodPressureDatabase) {
-    suspend fun saveHighPressure(bloodPressureDTO: BloodPressureDTO) {
-        return database.bloodPressureDatabaseDao.insert(bloodPressureDTO)
+class BloodPressureRepository(
+    private val database: BloodPressureDatabase,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : BloodPressureDataSource {
+    override suspend fun createNewBloodPressure(bloodPressureDTO: BloodPressureDTO) =
+        wrapEspressoIdlingResource {
+            withContext(ioDispatcher) {
+                database.bloodPressureDatabaseDao.insert(bloodPressureDTO)
+            }
+        }
+
+    override suspend fun editBloodPressure(bloodPressureDTO: BloodPressureDTO) =
+        wrapEspressoIdlingResource {
+            withContext(ioDispatcher) {
+                database.bloodPressureDatabaseDao.update(bloodPressureDTO)
+            }
+        }
+
+    override suspend fun getAllRecords(): Result<List<BloodPressureDTO>> = withContext(ioDispatcher) {
+        wrapEspressoIdlingResource {
+            return@withContext try {
+                Result.Success(database.bloodPressureDatabaseDao.getAllRecords())
+            } catch (ex: Exception) {
+                Result.Error(ex.localizedMessage)
+            }
+        }
     }
 
-    suspend fun editHighPressure(bloodPressureDTO: BloodPressureDTO) {
-        return database.bloodPressureDatabaseDao.update(bloodPressureDTO)
-    }
+    override suspend fun getRecordsByDate(fromDate: String, toDate: String): Result<List<BloodPressureDTO>> =
+        withContext(ioDispatcher) {
+            return@withContext try {
+                Result.Success(database.bloodPressureDatabaseDao.getRecordsByDate(fromDate, toDate))
+            } catch (ex: Exception) {
+                Result.Error(ex.localizedMessage)
+            }
+        }
 
-     fun getAllRecords() : LiveData<List<BloodPressureDTO>> {
-        return database.bloodPressureDatabaseDao.getAllRecords()
-    }
-
-     fun getRecordsByDate(fromDate: String, toDate: String) : LiveData<List<BloodPressureDTO>> {
-        return database.bloodPressureDatabaseDao.getRecordsByDate(fromDate, toDate)
-    }
-
-    suspend fun getRecordsByDateInList(fromDate: String, toDate: String) : List<BloodPressureDTO> {
+    override suspend fun getRecordsByDateInList(fromDate: String, toDate: String): List<BloodPressureDTO> {
         return database.bloodPressureDatabaseDao.getRecordsByDateInList(fromDate, toDate)
     }
 
-    suspend fun deleteRecord(id: Int)  {
-        database.bloodPressureDatabaseDao.deleteRecord(id)
+    override suspend fun deleteRecord(id: Int) {
+        wrapEspressoIdlingResource {
+            withContext(ioDispatcher) {
+                database.bloodPressureDatabaseDao.deleteRecord(id)
+            }
+        }
     }
 
-    suspend fun clear()  {
-        database.bloodPressureDatabaseDao.clear()
+    override suspend fun clear() {
+        wrapEspressoIdlingResource {
+            withContext(ioDispatcher) {
+                database.bloodPressureDatabaseDao.clear()
+            }
+        }
     }
 }

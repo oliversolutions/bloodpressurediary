@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.oliversolutions.dev.bloodpressurediary.BloodPressure
 import com.oliversolutions.dev.bloodpressurediary.databinding.BloodPressureViewItemBinding
 import com.oliversolutions.dev.bloodpressurediary.databinding.HeaderBinding
 import com.oliversolutions.dev.bloodpressurediary.databinding.SubHeaderBinding

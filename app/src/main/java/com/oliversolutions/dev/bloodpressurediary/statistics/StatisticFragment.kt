@@ -5,14 +5,11 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.oliversolutions.dev.bloodpressurediary.App
-import com.oliversolutions.dev.bloodpressurediary.BloodPressureFilter
 import com.oliversolutions.dev.bloodpressurediary.R
 import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentStatisticBinding
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.oliversolutions.dev.bloodpressurediary.settings.DataViewModel
+import com.oliversolutions.dev.bloodpressurediary.base.BaseFragment
 import ir.androidexception.datatable.model.DataTableHeader
 import ir.androidexception.datatable.model.DataTableRow
 import ir.mahozad.android.PieChart
@@ -26,17 +23,17 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-class StatisticFragment : Fragment() {
+class StatisticFragment : BaseFragment() {
 
     private lateinit var binding: FragmentStatisticBinding
-    val viewModel: StatisticViewModel by viewModel()
+    override val _viewModel: StatisticViewModel by viewModel()
 
     fun loadPieChart() {
         val pieChart = binding.pieChart
         pieChart.apply {
             slices = listOf(
                 PieChart.Slice(
-                    viewModel.bloodPressureStatisticData.stage_2!!,
+                    _viewModel.bloodPressureStatisticData.stage_2!!,
                     Color.rgb(255, 68, 68),
                     legend = context.getString(R.string.stage_2_legend_title),
                     legendIcon = R.drawable.ic_about,
@@ -44,7 +41,7 @@ class StatisticFragment : Fragment() {
                     legendIconTint = Color.rgb(255,68,68)
                 ),
                 PieChart.Slice(
-                    viewModel.bloodPressureStatisticData.stage_1!!,
+                    _viewModel.bloodPressureStatisticData.stage_1!!,
                     Color.rgb(255, 136, 0),
                     legend = context.getString(R.string.stage_1_legend_title),
                     legendIcon = R.drawable.ic_about,
@@ -52,7 +49,7 @@ class StatisticFragment : Fragment() {
                     legendColor = Color.BLACK
                 ),
                 PieChart.Slice(
-                    viewModel.bloodPressureStatisticData.pre!!,
+                    _viewModel.bloodPressureStatisticData.pre!!,
                     Color.rgb(255, 187, 51),
                     legend = context.getString(R.string.prehypertension_legend_title),
                     legendIcon = R.drawable.ic_about,
@@ -60,7 +57,7 @@ class StatisticFragment : Fragment() {
                     legendColor = Color.BLACK
                 ),
                 PieChart.Slice(
-                    viewModel.bloodPressureStatisticData.normal!!,
+                    _viewModel.bloodPressureStatisticData.normal!!,
                     Color.rgb(153, 204, 0),
                     legend = context.getString(R.string.normal_legend_title),
                     legendIcon = R.drawable.ic_about,
@@ -68,7 +65,7 @@ class StatisticFragment : Fragment() {
                     legendColor = Color.BLACK
                 ),
                 PieChart.Slice(
-                    viewModel.bloodPressureStatisticData.hypotension!!,
+                    _viewModel.bloodPressureStatisticData.hypotension!!,
                     Color.rgb(51, 181, 229),
                     legend = context.getString(R.string.hypotension_legend_title),
                     legendIcon = R.drawable.ic_about,
@@ -98,6 +95,7 @@ class StatisticFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentStatisticBinding.inflate(inflater, container, false)
+        binding.viewModel = _viewModel
         binding.lifecycleOwner = this
         observeHighPressureValues()
         setHasOptionsMenu(true)
@@ -107,16 +105,16 @@ class StatisticFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeHighPressureValues() {
-        viewModel.bloodPressureValues.observe(viewLifecycleOwner, {
-            viewModel.numRecords = it.size
-            App.prefs.fromDate = viewModel.fromDate
-            App.prefs.toDate = viewModel.toDate
+        _viewModel.bloodPressureValues.observe(viewLifecycleOwner) {
+            _viewModel.numRecords = it.size
+            App.prefs.fromDate = _viewModel.fromDate
+            App.prefs.toDate = _viewModel.toDate
             bindHeader()
             if (it.isNotEmpty()) {
                 binding.noDataFoundLayout.visibility = View.GONE
                 binding.pieChart.visibility = View.VISIBLE
                 binding.dataTable.visibility = View.VISIBLE
-                viewModel.setBloodPressureStatisticData(it)
+                _viewModel.setBloodPressureStatisticData(it)
                 loadPieChart()
                 bindDataTable()
             } else {
@@ -124,7 +122,7 @@ class StatisticFragment : Fragment() {
                 binding.dataTable.visibility = View.GONE
                 binding.noDataFoundLayout.visibility = View.VISIBLE
             }
-        })
+        }
     }
 
     private fun bindDataTable () {
@@ -141,23 +139,23 @@ class StatisticFragment : Fragment() {
         val rows = arrayListOf(
             DataTableRow(arrayListOf(
                 getString(R.string.systolic_column_name_text_value),
-                df.format(viewModel.bloodPressureStatisticData.maxSys).toString(),
-                df.format(viewModel.bloodPressureStatisticData.minSys).toString(),
-                df.format(viewModel.bloodPressureStatisticData.averageSys).toString()
+                df.format(_viewModel.bloodPressureStatisticData.maxSys).toString(),
+                df.format(_viewModel.bloodPressureStatisticData.minSys).toString(),
+                df.format(_viewModel.bloodPressureStatisticData.averageSys).toString()
             )),
 
             DataTableRow(arrayListOf(
                 getString(R.string.diastolic_column_name_text_value),
-                df.format(viewModel.bloodPressureStatisticData.maxDia).toString(),
-                df.format(viewModel.bloodPressureStatisticData.minDia).toString(),
-                df.format(viewModel.bloodPressureStatisticData.averageDia).toString()
+                df.format(_viewModel.bloodPressureStatisticData.maxDia).toString(),
+                df.format(_viewModel.bloodPressureStatisticData.minDia).toString(),
+                df.format(_viewModel.bloodPressureStatisticData.averageDia).toString()
             )),
 
             DataTableRow(arrayListOf(
                 getString(R.string.pulse_text_view_value),
-                df.format(viewModel.bloodPressureStatisticData.maxPulse).toString(),
-                df.format(viewModel.bloodPressureStatisticData.minPulse).toString(),
-                df.format(viewModel.bloodPressureStatisticData.averagePulse).toString()
+                df.format(_viewModel.bloodPressureStatisticData.maxPulse).toString(),
+                df.format(_viewModel.bloodPressureStatisticData.minPulse).toString(),
+                df.format(_viewModel.bloodPressureStatisticData.averagePulse).toString()
             )),
         )
         dataTable.rows = rows
@@ -166,22 +164,22 @@ class StatisticFragment : Fragment() {
     }
 
     private fun bindHeader() {
-        if (viewModel.fromDate.isEmpty() || viewModel.toDate.isEmpty()) {
+        if (_viewModel.fromDate.isEmpty() || _viewModel.toDate.isEmpty()) {
             binding.fromDateToDateTextView.text = binding.fromDateToDateTextView.context.getString(R.string.all_records)
-        } else if (viewModel.fromDate.isNotEmpty() && viewModel.toDate.isNotEmpty()){
+        } else if (_viewModel.fromDate.isNotEmpty() && _viewModel.toDate.isNotEmpty()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val formatter = DateTimeFormatter.ofPattern("dd-MMMM")
-                val formattedFromDate = LocalDate.parse(viewModel.fromDate).format(formatter)
-                val formattedToDate = LocalDate.parse(viewModel.toDate).format(formatter)
+                val formattedFromDate = LocalDate.parse(_viewModel.fromDate).format(formatter)
+                val formattedToDate = LocalDate.parse(_viewModel.toDate).format(formatter)
                 binding.fromDateToDateTextView.text = "$formattedFromDate - $formattedToDate"
             } else {
-                val formattedFromDate = SimpleDateFormat("dd-MMMM", Locale.getDefault()).format(Date(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(viewModel.fromDate).time))
-                val formattedToDate = SimpleDateFormat("dd-MMMM", Locale.getDefault()).format(Date(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(viewModel.toDate).time))
+                val formattedFromDate = SimpleDateFormat("dd-MMMM", Locale.getDefault()).format(Date(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(_viewModel.fromDate).time))
+                val formattedToDate = SimpleDateFormat("dd-MMMM", Locale.getDefault()).format(Date(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(_viewModel.toDate).time))
                 binding.fromDateToDateTextView.text = "$formattedFromDate - $formattedToDate"
             }
         }
         binding.numRecordsTextView.text =
-            viewModel.numRecords.toString() + " " + binding.fromDateToDateTextView.context.getString(R.string.records)
+            _viewModel.numRecords.toString() + " " + binding.fromDateToDateTextView.context.getString(R.string.records)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -198,52 +196,27 @@ class StatisticFragment : Fragment() {
             val picker = builder.build()
             picker.show(activity?.supportFragmentManager!!, picker.toString())
             picker.addOnPositiveButtonClickListener {
-                val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val formatter = SimpleDateFormat("yyyy-MM-dd")
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it.first
-                val selectedFromDate = formatter.format(calendar.time)
+                val customFromDate = formatter.format(calendar.time)
                 calendar.timeInMillis = it.second
-                val selectedToDate = formatter.format(calendar.time)
-                viewModel.updateFilter(
-                    BloodPressureFilter.SHOW_CUSTOM,
-                    selectedFromDate,
-                    selectedToDate
-                )
-                observeHighPressureValues()
+                val customToDate = formatter.format(calendar.time)
+                _viewModel.updateFilter(item, customFromDate, customToDate)
             }
-            return true
-        } else {
-            viewModel.updateFilter(
-                when (item.itemId) {
-                    R.id.all_records -> {
-                        BloodPressureFilter.SHOW_ALL
-                    }
-                    R.id.today -> {
-                        BloodPressureFilter.SHOW_TODAY
-                    }
-                    R.id.yesterday -> {
-                        BloodPressureFilter.SHOW_YESTERDAY
-                    }
-                    R.id.last_7_days -> {
-                        BloodPressureFilter.SHOW_LAST_7_DAYS
-                    }
-                    R.id.last_14_days -> {
-                        BloodPressureFilter.SHOW_LAST_14_DAYS
-                    }
-                    R.id.last_30_days -> {
-                        BloodPressureFilter.SHOW_LAST_30_DAYS
-                    }
-                    R.id.last_60_days -> {
-                        BloodPressureFilter.SHOW_LAST_60_DAYS
-                    }
-                    R.id.last_90_days -> {
-                        BloodPressureFilter.SHOW_LAST_90_DAYS
-                    }
-                    else -> return false
-                }
-            )
-            observeHighPressureValues()
-            return true
         }
+        if (intArrayOf(R.id.all_records,
+                R.id.today,
+                R.id.yesterday,
+                R.id.last_7_days,
+                R.id.last_14_days,
+                R.id.last_30_days,
+                R.id.last_60_days,
+                R.id.last_90_days,
+            ).contains(item.itemId)) {
+            _viewModel.updateFilter(item)
+        }
+        return true
     }
+
 }

@@ -30,7 +30,7 @@
         android:label="{label}">
         <argument
             android:name="bloodPressure"
-            app:argType="com.oliversolutions.dev.bloodpressurediary.BloodPressure"
+            app:argType="com.oliversolutions.dev.bloodpressurediary.main.BloodPressure"
             app:nullable="true" />
         <argument
             android:name="label"

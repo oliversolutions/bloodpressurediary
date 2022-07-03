@@ -30,14 +30,14 @@ class MeasurementReminderWorker(appContext: Context, params: WorkerParameters): 
         return try {
             if (App.prefs.sendMeasurementReminder) {
                 val database = BloodPressureDatabase.getInstance(applicationContext)
-                val highPressureRepository = BloodPressureRepository(database)
+                val bloodPressureRepository = BloodPressureRepository(database)
                 val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
                 val cal = Calendar.getInstance()
                 cal.add(Calendar.DATE, 0)
                 val toDate = dateFormat.format(cal.time)
                 cal.add(Calendar.DATE, (App.prefs.measurementReminderDays * -1))
                 val fromDate = dateFormat.format(cal.time)
-                if (highPressureRepository.getRecordsByDateInList(fromDate, toDate).isEmpty()) {
+                if (bloodPressureRepository.getRecordsByDateInList(fromDate, toDate).isEmpty()) {
                     notificationManager =
                         applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

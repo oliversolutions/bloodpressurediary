@@ -2,15 +2,15 @@ package com.oliversolutions.dev.bloodpressurediary.settings
 
 import android.app.Application
 import android.os.Build
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.oliversolutions.dev.bloodpressurediary.App
+import com.oliversolutions.dev.bloodpressurediary.base.BaseViewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class RemindersViewModel(application: Application) : AndroidViewModel(application) {
+class RemindersViewModel(application: Application) : BaseViewModel(application) {
     var measurementReminderTime = MutableLiveData<String>()
     var medicationReminderTime = MutableLiveData<String>()
     var medicationSecondReminderTime = MutableLiveData<String>()

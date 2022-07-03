@@ -1,4 +1,4 @@
-package com.oliversolutions.dev.bloodpressurediary
+package com.oliversolutions.dev.bloodpressurediary.utils
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -35,9 +35,6 @@ class Prefs (context: Context) {
     private val PREFS_TO_DATE = "PREFS_TO_DATE"
     private val SHARED_TO_DATE = "SHARED_TO_DATE"
 
-    private val PREFS_IS_LAUNCHED = "PREFS_IS_LAUNCHED"
-    private val SHARED_IS_LAUNCHED = "SHARED_IS_LAUNCHED"
-
     private val measurementReminderPrefs: SharedPreferences = context.getSharedPreferences(PREFS_MEASUREMENT_REMINDER, 0)
     private val measurementReminderDaysPrefs: SharedPreferences = context.getSharedPreferences(PREFS_MEASUREMENT_REMINDER_DAYS, 0)
     private val medicationReminderDaysPrefs: SharedPreferences = context.getSharedPreferences(PREFS_MEDICATION_REMINDER_DAYS, 0)
@@ -51,7 +48,6 @@ class Prefs (context: Context) {
 
     private val fromDayPrefs: SharedPreferences = context.getSharedPreferences(PREFS_FROM_DATE, 0)
     private val toDatePrefs: SharedPreferences = context.getSharedPreferences(PREFS_TO_DATE, 0)
-    private val isLaunchedPrefs: SharedPreferences = context.getSharedPreferences(PREFS_IS_LAUNCHED, 0)
 
     private val PREFS_RATE_US_IS_LAUNCHED = "PREFS_RATE_US_IS_LAUNCHED"
     private val SHARED_RATE_US_IS_LAUNCHED = "SHARED_RATE_US_IS_LAUNCHED"
@@ -103,9 +99,5 @@ class Prefs (context: Context) {
     var toDate: String?
         get() = toDatePrefs.getString(SHARED_TO_DATE, null)
         set(value) = toDatePrefs.edit().putString(SHARED_TO_DATE, value).apply()
-
-    var isLaunched: Boolean
-        get() = isLaunchedPrefs.getBoolean(SHARED_IS_LAUNCHED, false)
-        set(value) = isLaunchedPrefs.edit().putBoolean(SHARED_IS_LAUNCHED, value).apply()
 
 }

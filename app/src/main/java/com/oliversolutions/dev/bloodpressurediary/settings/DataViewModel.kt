@@ -1,17 +1,16 @@
 package com.oliversolutions.dev.bloodpressurediary.settings
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDatabase
-import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureRepository
+import com.oliversolutions.dev.bloodpressurediary.base.BaseViewModel
+import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureDataSource
 import kotlinx.coroutines.launch
 
-class DataViewModel(application: Application, private val highPressureRepository: BloodPressureRepository) : AndroidViewModel(application) {
+class DataViewModel(application: Application, private val bloodPressureRepository: BloodPressureDataSource) : BaseViewModel(application) {
 
     fun clear() {
         viewModelScope.launch {
-            highPressureRepository.clear()
+            bloodPressureRepository.clear()
         }
     }
 }

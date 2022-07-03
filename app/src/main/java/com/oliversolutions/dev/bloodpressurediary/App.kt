@@ -5,10 +5,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDatabase
 import com.oliversolutions.dev.bloodpressurediary.main.MainViewModel
+import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureDataSource
 import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureRepository
 import com.oliversolutions.dev.bloodpressurediary.settings.DataViewModel
 import com.oliversolutions.dev.bloodpressurediary.settings.RemindersViewModel
 import com.oliversolutions.dev.bloodpressurediary.statistics.StatisticViewModel
+import com.oliversolutions.dev.bloodpressurediary.utils.Prefs
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -34,7 +36,7 @@ class App: Application() {
             viewModel {
                 DataViewModel(
                     get(),
-                    get() as BloodPressureRepository
+                    get() as BloodPressureDataSource
                 )
             }
             viewModel {
@@ -45,17 +47,17 @@ class App: Application() {
             viewModel {
                 StatisticViewModel(
                     get(),
-                    get() as BloodPressureRepository
+                    get() as BloodPressureDataSource
                 )
             }
             viewModel {
                 MainViewModel(
                     get(),
-                    get() as BloodPressureRepository
+                    get() as BloodPressureDataSource
                 )
             }
 
-            single { BloodPressureRepository(get())}
+            single { BloodPressureRepository(get()) as BloodPressureDataSource }
             single { BloodPressureDatabase.getInstance(this@App) }
         }
 

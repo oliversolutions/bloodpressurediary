@@ -4,6 +4,7 @@ buildscript {
     ext.room_version = "2.3.0"
     ext.version_glide = "4.8.0"
     ext.koinVersion = '2.0.1'
+    ext.espressoVersion = '3.2.0'
 
     repositories {
         google()

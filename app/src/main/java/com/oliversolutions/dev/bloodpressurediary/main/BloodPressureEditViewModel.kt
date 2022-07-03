@@ -2,13 +2,12 @@ package com.oliversolutions.dev.bloodpressurediary.main
 
 import android.app.Application
 import android.os.Build
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.oliversolutions.dev.bloodpressurediary.BloodPressure
+import com.oliversolutions.dev.bloodpressurediary.R
+import com.oliversolutions.dev.bloodpressurediary.base.BaseViewModel
 import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDTO
-import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDatabase
-import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureRepository
+import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureDataSource
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -19,13 +18,12 @@ const val DEFAULT_SYSTOLIC = 120
 const val DEFAULT_DIASTOLIC = 65
 const val DEFAULT_PULSE = 60
 
-class BloodPressureEditViewModel(bloodPressure: BloodPressure?, application: Application, private val highPressureRepository: BloodPressureRepository) : AndroidViewModel(application) {
+class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: Application, private val bloodPressureRepository: BloodPressureDataSource) : BaseViewModel(app) {
 
     val systolic = MutableLiveData(DEFAULT_SYSTOLIC)
     val diastolic = MutableLiveData(DEFAULT_DIASTOLIC)
     val pulse = MutableLiveData(DEFAULT_PULSE)
     val notes = MutableLiveData<String>()
-    val insertMode = bloodPressure == null
     val creationDate = MutableLiveData(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
@@ -40,7 +38,7 @@ class BloodPressureEditViewModel(bloodPressure: BloodPressure?, application: App
             SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(System.currentTimeMillis()))
         }
     )
-    private var highPressureId: Long = 0
+    private var bloodPressureId: Long = 0
 
     init {
         if (bloodPressure != null) {
@@ -52,19 +50,20 @@ class BloodPressureEditViewModel(bloodPressure: BloodPressure?, application: App
             }
             creationDate.value = bloodPressure.creationDate!!
             creationTime.value = bloodPressure.creationTime!!
-            highPressureId = bloodPressure.id
+            bloodPressureId = bloodPressure.id
         }
     }
 
     fun deleteRecord() {
         viewModelScope.launch {
-            highPressureRepository.deleteRecord(highPressureId.toInt())
+            bloodPressureRepository.deleteRecord(bloodPressureId.toInt())
+            showToast.value = app.getString(R.string.record_removed)
         }
     }
 
-    fun saveHighPressure(bloodPressure: BloodPressure) {
+    fun createNewBloodPressure(bloodPressure: BloodPressure) {
         viewModelScope.launch {
-            highPressureRepository.saveHighPressure(
+            bloodPressureRepository.createNewBloodPressure(
                 BloodPressureDTO(
                     bloodPressure.systolic,
                     bloodPressure.diastolic,
@@ -77,12 +76,13 @@ class BloodPressureEditViewModel(bloodPressure: BloodPressure?, application: App
                     null
                 )
             )
+            showToast.value = app.getString(R.string.blood_pressure_saved)
         }
     }
 
-    fun editHighPressure() {
+    fun editBloodPressure() {
         viewModelScope.launch {
-            highPressureRepository.editHighPressure(
+            bloodPressureRepository.editBloodPressure(
                 BloodPressureDTO(
                     systolic.value?.toDouble(),
                     diastolic.value?.toDouble(),
@@ -93,9 +93,10 @@ class BloodPressureEditViewModel(bloodPressure: BloodPressure?, application: App
                     null,
                     null,
                     null,
-                    highPressureId
+                    bloodPressureId
                 )
             )
+            showToast.value = app.getString(R.string.blood_pressure_saved)
         }
     }
 }

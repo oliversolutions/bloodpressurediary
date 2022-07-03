@@ -1,14 +1,10 @@
 package com.oliversolutions.dev.bloodpressurediary.main
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
@@ -16,45 +12,48 @@ import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentMainBindin
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.oliversolutions.dev.bloodpressurediary.*
 import com.oliversolutions.dev.bloodpressurediary.R
-import com.oliversolutions.dev.bloodpressurediary.settings.DataViewModel
-import com.oliversolutions.dev.bloodpressurediary.statistics.StatisticViewModel
+import com.oliversolutions.dev.bloodpressurediary.base.BaseFragment
+import com.oliversolutions.dev.bloodpressurediary.base.NavigationCommand
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainFragment : Fragment() {
-
+class MainFragment : BaseFragment() {
     private lateinit var bloodPressureGridAdapter: BloodPressureGridAdapter
     private lateinit var binding: FragmentMainBinding
     private var mInterstitialAd: InterstitialAd? = null
-
-    val mainViewModel: MainViewModel by viewModel()
+    override val _viewModel: MainViewModel by viewModel()
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
-        binding.progressBar.visibility = View.VISIBLE
         binding.lifecycleOwner = this
-        binding.viewModel = mainViewModel
-        binding.bloodPressureRecycler.adapter = BloodPressureGridAdapter(BloodPressureGridAdapter.OnClickListener {
-            mainViewModel.displayEditBloodPressure(it)
-        }).apply {
-            bloodPressureGridAdapter = this
-        }
-        loadAds()
-        binding.bloodPressureSave.setOnClickListener{
-            showAd()
-            mainViewModel.displayEditBloodPressure(null)
-        }
-        mainViewModel.navigateToSelectedBloodPressure.observeOnce(viewLifecycleOwner, {
-            showAd()
-            val labelString = if (it == null)  {
-                getString(R.string.add_new_record_nav)
-            } else {
-                getString(R.string.edit_record)
+        binding.viewModel = _viewModel
+        binding.bloodPressureRecycler.adapter =
+            BloodPressureGridAdapter(BloodPressureGridAdapter.OnClickListener {
+                _viewModel.navigationCommand.value = NavigationCommand.To(
+                    MainFragmentDirections.actionNavigationHomeToHighPressureEditFragment(
+                        it,
+                        getString(R.string.edit_record)
+                    )
+                )
+            }).apply {
+                bloodPressureGridAdapter = this
             }
-            this.findNavController().navigate(MainFragmentDirections.actionNavigationHomeToHighPressureEditFragment(it, labelString))
-        })
+        loadAds()
+        binding.bloodPressureSave.setOnClickListener {
+            showAd()
+            _viewModel.navigationCommand.value = NavigationCommand.To(
+                MainFragmentDirections.actionNavigationHomeToHighPressureEditFragment(
+                    null,
+                    getString(R.string.add_new_record_nav)
+                )
+            )
+        }
         setHasOptionsMenu(true)
         observeBloodPressureValues()
         return binding.root
@@ -71,13 +70,14 @@ class MainFragment : Fragment() {
         InterstitialAd.load(
             requireContext(),
             getString(R.string.bp_intersticial), adRequest, object : InterstitialAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                mInterstitialAd = null
-            }
-            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                mInterstitialAd = interstitialAd
-            }
-        })
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    mInterstitialAd = null
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    mInterstitialAd = interstitialAd
+                }
+            })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -85,7 +85,6 @@ class MainFragment : Fragment() {
         inflater.inflate(R.menu.filter_date_record_menu, menu)
     }
 
-    @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.custom) {
@@ -98,77 +97,37 @@ class MainFragment : Fragment() {
                 val formatter = SimpleDateFormat("yyyy-MM-dd")
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it.first
-                val selectedFromDate = formatter.format(calendar.time)
+                val customFromDate = formatter.format(calendar.time)
                 calendar.timeInMillis = it.second
-                val selectedToDate = formatter.format(calendar.time)
-                mainViewModel.updateFilter(BloodPressureFilter.SHOW_CUSTOM, selectedFromDate, selectedToDate)
-                observeBloodPressureValues()
+                val customToDate = formatter.format(calendar.time)
+                _viewModel.updateFilter(item, customFromDate, customToDate)
             }
-            return true
-        } else {
-            mainViewModel.updateFilter(
-                when (item.itemId) {
-                    R.id.all_records -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        BloodPressureFilter.SHOW_ALL
-                    }
-                    R.id.today -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        BloodPressureFilter.SHOW_TODAY
-                    }
-                    R.id.yesterday -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        BloodPressureFilter.SHOW_YESTERDAY
-                    }
-                    R.id.last_7_days -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        BloodPressureFilter.SHOW_LAST_7_DAYS
-                    }
-                    R.id.last_14_days -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        BloodPressureFilter.SHOW_LAST_14_DAYS
-                    }
-                    R.id.last_30_days -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        BloodPressureFilter.SHOW_LAST_30_DAYS
-                    }
-                    R.id.last_60_days -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        BloodPressureFilter.SHOW_LAST_60_DAYS
-                    }
-                    R.id.last_90_days -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                        BloodPressureFilter.SHOW_LAST_90_DAYS
-                    }
-
-                    else -> return false
-                }
-            )
-            observeBloodPressureValues()
-            return true
         }
+        if (intArrayOf(R.id.all_records,
+                R.id.today,
+                R.id.yesterday,
+                R.id.last_7_days,
+                R.id.last_14_days,
+                R.id.last_30_days,
+                R.id.last_60_days,
+                R.id.last_90_days,
+            ).contains(item.itemId)) {
+            _viewModel.updateFilter(item)
+
+        }
+        return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun observeBloodPressureValues() {
-        mainViewModel.bloodPressureValues.observe(viewLifecycleOwner, {
-            if (it.isEmpty()) {
-                binding.noDataFoundLayout.visibility = View.VISIBLE
-                if (App.prefs.isLaunched) {
-                    binding.noDataFoundTitle.text = getString(R.string.oops)
-                    binding.noDataFoundDescription.text = getString(R.string.no_data_found)
-                } else {
-                    binding.noDataFoundTitle.text = getString(R.string.get_started)
-                    binding.noDataFoundDescription.text = getString(R.string.add_new_record)
-
-                    App.prefs.isLaunched = true
-                }
-            } else {
-                binding.noDataFoundLayout.visibility = View.GONE
-            }
-            bloodPressureGridAdapter.addHeaderAndSubmitList(it, mainViewModel.fromDate, mainViewModel.toDate)
-            App.prefs.fromDate = mainViewModel.fromDate
-            App.prefs.toDate = mainViewModel.toDate
-            binding.progressBar.visibility = View.INVISIBLE
-        })
+        _viewModel.bloodPressureValues.observe(viewLifecycleOwner) {
+            bloodPressureGridAdapter.addHeaderAndSubmitList(
+                it,
+                _viewModel.fromDate,
+                _viewModel.toDate
+            )
+            App.prefs.fromDate = _viewModel.fromDate
+            App.prefs.toDate = _viewModel.toDate
+        }
     }
 }

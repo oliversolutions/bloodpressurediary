@@ -39,7 +39,7 @@ interface BloodPressureDatabaseDao {
             "(SELECT SUM(systolic)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_systolic,\n" +
             "(SELECT SUM(pulse)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_pulse\n  " +
             "FROM high_pressure_table a WHERE a.creation_date >= :fromDate AND a.creation_date <= :toDate ORDER BY a.creation_date DESC")
-    fun getRecordsByDate(fromDate: String, toDate: String): LiveData<List<BloodPressureDTO>>
+    fun getRecordsByDate(fromDate: String, toDate: String): List<BloodPressureDTO>
 
 
     @Query("SELECT * FROM high_pressure_table WHERE creation_date >= :fromDate AND creation_date <= :toDate ORDER BY creation_date DESC")
@@ -56,7 +56,7 @@ interface BloodPressureDatabaseDao {
             "(SELECT SUM(systolic)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_systolic,\n" +
             "(SELECT SUM(pulse)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_pulse\n " +
             "FROM high_pressure_table a ORDER BY a.creation_date DESC")
-     fun getAllRecords(): LiveData<List<BloodPressureDTO>>
+     suspend fun getAllRecords(): List<BloodPressureDTO>
 
     @Query("SELECT * FROM high_pressure_table ORDER BY id DESC LIMIT 1")
     suspend fun getLastRecord(): BloodPressureDTO?

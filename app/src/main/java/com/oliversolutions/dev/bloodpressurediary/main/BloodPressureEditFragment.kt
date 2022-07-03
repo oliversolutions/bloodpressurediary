@@ -6,22 +6,26 @@ import android.os.Bundle
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentBloodPressureEditBinding
 import com.google.android.material.button.MaterialButton
 import com.oliversolutions.dev.bloodpressurediary.*
+import com.oliversolutions.dev.bloodpressurediary.base.BaseFragment
+import com.oliversolutions.dev.bloodpressurediary.base.NavigationCommand
 import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureRepository
+import com.oliversolutions.dev.bloodpressurediary.utils.BloodPressureDiagnosis
+import com.oliversolutions.dev.bloodpressurediary.utils.getBloodPressureDiagnosis
+import com.oliversolutions.dev.bloodpressurediary.utils.getBloodPressureDiastolic
+import com.oliversolutions.dev.bloodpressurediary.utils.getBloodPressureSystolic
 import org.koin.android.ext.android.get
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class BloodPressureEditFragment : Fragment() {
+class BloodPressureEditFragment : BaseFragment() {
     private lateinit var binding: FragmentBloodPressureEditBinding
-    lateinit var viewModel: BloodPressureEditViewModel
+    override lateinit var _viewModel: BloodPressureEditViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(
@@ -31,8 +35,8 @@ class BloodPressureEditFragment : Fragment() {
         val viewModelFactory = BloodPressureEditViewModelFactory(
            BloodPressureEditFragmentArgs.fromBundle(requireArguments()).bloodPressure, requireActivity().application, BloodPressureRepository(get())
         )
-        viewModel = ViewModelProvider(this, viewModelFactory).get(BloodPressureEditViewModel::class.java)
-        binding.viewModel = viewModel
+        _viewModel = ViewModelProvider(this, viewModelFactory).get(BloodPressureEditViewModel::class.java)
+        binding.viewModel = _viewModel
         configureLayout()
         return binding.root
     }
@@ -43,12 +47,12 @@ class BloodPressureEditFragment : Fragment() {
         binding.diagnosisLinearlayout.setOnClickListener {
             BloodPressureTypesDialogFragment().show(childFragmentManager, BloodPressureTypesDialogFragment.TAG)
         }
-        viewModel.systolic.observe(viewLifecycleOwner, {
+        _viewModel.systolic.observe(viewLifecycleOwner) {
             setHighPressureDiagnose()
-        })
-        viewModel.diastolic.observe(viewLifecycleOwner, {
+        }
+        _viewModel.diastolic.observe(viewLifecycleOwner) {
             setHighPressureDiagnose()
-        })
+        }
         setHasOptionsMenu(true)
         configureDiagnosisButtons()
     }
@@ -69,8 +73,8 @@ class BloodPressureEditFragment : Fragment() {
         val stage1Button = binding.stage1Button
         val stage2Button = binding.stage2Button
         hypotensionButton.setOnClickListener {
-            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Hypotension)
-            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Hypotension)
+            _viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Hypotension)
+            _viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Hypotension)
             binding.diagnosisTitle.text = getString(R.string.hypotension_title)
             binding.diagnosisValue.text = getString(R.string.hypotension_value)
             setBorder(hypotensionButton)
@@ -80,8 +84,8 @@ class BloodPressureEditFragment : Fragment() {
             removeBorder(stage2Button)
         }
         normalButton.setOnClickListener {
-            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Normal)
-            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Normal)
+            _viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Normal)
+            _viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Normal)
             binding.diagnosisTitle.text = getString(R.string.normal_title)
             binding.diagnosisValue.text = getString(R.string.normal_value)
             setBorder(normalButton)
@@ -91,8 +95,8 @@ class BloodPressureEditFragment : Fragment() {
             removeBorder(stage2Button)
         }
         preHypertensionButton.setOnClickListener {
-            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Pre)
-            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Pre)
+            _viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Pre)
+            _viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Pre)
             binding.diagnosisTitle.text = getString(R.string.prehypertension_title)
             binding.diagnosisValue.text = getString(R.string.prehypertension_value)
             setBorder(preHypertensionButton)
@@ -103,8 +107,8 @@ class BloodPressureEditFragment : Fragment() {
         }
 
         stage1Button.setOnClickListener {
-            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Stage1)
-            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Stage1)
+            _viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Stage1)
+            _viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Stage1)
             binding.diagnosisTitle.text = getString(R.string.stage_1_title)
             binding.diagnosisValue.text = getString(R.string.stage_1_value)
             setBorder(stage1Button)
@@ -114,8 +118,8 @@ class BloodPressureEditFragment : Fragment() {
             removeBorder(stage2Button)
         }
         stage2Button.setOnClickListener {
-            viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Stage2)
-            viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Stage2)
+            _viewModel.systolic.value = getBloodPressureSystolic(BloodPressureDiagnosis.Stage2)
+            _viewModel.diastolic.value = getBloodPressureDiastolic(BloodPressureDiagnosis.Stage2)
             binding.diagnosisTitle.text = getString(R.string.stage_2_title)
             binding.diagnosisValue.text = getString(R.string.stage_2_value)
             setBorder(stage2Button)
@@ -213,7 +217,7 @@ class BloodPressureEditFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (viewModel.insertMode) {
+        if (_viewModel.bloodPressure == null) {
             inflater.inflate(R.menu.add_new_record_menu, menu)
         } else {
             inflater.inflate(R.menu.edit_record_menu, menu)
@@ -226,7 +230,7 @@ class BloodPressureEditFragment : Fragment() {
     }
 
     private fun onTimeSelected(time: String) {
-        viewModel.creationTime.value = time
+        _viewModel.creationTime.value = time
     }
 
     private fun showDatePickerDialog() {
@@ -236,11 +240,11 @@ class BloodPressureEditFragment : Fragment() {
 
     private fun onDateSelected(day: Int, month: Int, year: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            viewModel.creationDate.value = LocalDateTime.of(year,month + 1,day,0,0).format(DateTimeFormatter.ISO_DATE)
+            _viewModel.creationDate.value = LocalDateTime.of(year,month + 1,day,0,0).format(DateTimeFormatter.ISO_DATE)
         } else {
             val monthPlus1 = month + 1
             val selectedDate = "$year-$monthPlus1-$day"
-            viewModel.creationDate.value = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(
+            _viewModel.creationDate.value = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(
                 Date(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(selectedDate).time)
             )
         }
@@ -249,28 +253,28 @@ class BloodPressureEditFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.delete_record -> {
-                viewModel.deleteRecord()
+                _viewModel.deleteRecord()
             }
             R.id.edit_record -> {
-                viewModel.editHighPressure()
+                _viewModel.editBloodPressure()
             }
             R.id.add_new_record -> {
-                val startDate = viewModel.creationDate.value
-                val startTime = viewModel.creationTime.value
+                val startDate = _viewModel.creationDate.value
+                val startTime = _viewModel.creationTime.value
                 val highPressure = BloodPressure(
-                    viewModel.systolic.value?.toDouble(),
-                    viewModel.diastolic.value?.toDouble(),
-                    viewModel.pulse.value?.toDouble(),
-                    viewModel.notes.value,
+                    _viewModel.systolic.value?.toDouble(),
+                    _viewModel.diastolic.value?.toDouble(),
+                    _viewModel.pulse.value?.toDouble(),
+                    _viewModel.notes.value,
                     startTime,
                     startDate,
                     null,
                     null,
                     null)
-                viewModel.saveHighPressure(highPressure)
+                _viewModel.createNewBloodPressure(highPressure)
             }
         }
-        this.findNavController().navigate(R.id.action_highPressureEditFragment_to_navigation_home)
+        _viewModel.navigationCommand.value = NavigationCommand.To(BloodPressureEditFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
         return true
     }
 }

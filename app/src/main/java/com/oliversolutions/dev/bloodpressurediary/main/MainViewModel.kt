@@ -3,31 +3,30 @@ package com.oliversolutions.dev.bloodpressurediary.main
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Build
+import android.view.MenuItem
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.oliversolutions.dev.bloodpressurediary.App
-import com.oliversolutions.dev.bloodpressurediary.BloodPressure
-import com.oliversolutions.dev.bloodpressurediary.BloodPressureFilter
-import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDatabase
+import com.oliversolutions.dev.bloodpressurediary.R
+import com.oliversolutions.dev.bloodpressurediary.base.BaseViewModel
 import com.oliversolutions.dev.bloodpressurediary.database.asDomainModel
-import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureRepository
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import com.oliversolutions.dev.bloodpressurediary.utils.Result
+import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDTO
+import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureDataSource
 
 @SuppressLint("SimpleDateFormat")
 @RequiresApi(Build.VERSION_CODES.O)
-class MainViewModel(application: Application, private val bloodPressureRepository: BloodPressureRepository) : AndroidViewModel(application) {
-
-    var bloodPressureValues: LiveData<List<BloodPressure>>
-    var fromDate  = ""
-    var toDate  = ""
-
-    private val _navigateToSelectedBloodPressure = MutableLiveData<BloodPressure?>()
-
-    val navigateToSelectedBloodPressure: LiveData<BloodPressure?>
-        get() = _navigateToSelectedBloodPressure
-
+class MainViewModel(
+    application: Application,
+    private val bloodPressureRepository: BloodPressureDataSource
+) : BaseViewModel(application) {
+    val bloodPressureValues = MutableLiveData<List<BloodPressure>>()
+    var fromDate = ""
+    var toDate = ""
     init {
         if (App.prefs.fromDate != null && App.prefs.toDate != null) {
             fromDate = App.prefs.fromDate!!
@@ -42,97 +41,89 @@ class MainViewModel(application: Application, private val bloodPressureRepositor
             fromDate = sevenDaysBefore
             toDate = today
         }
-        bloodPressureValues = when (fromDate.isBlank() || toDate.isBlank()) {
-            true -> {
-                Transformations.map(bloodPressureRepository.getAllRecords()) {
-                    it.asDomainModel()
-                }
+        setAllRecords(fromDate, toDate)
+    }
+
+    fun setAllRecords(fromDate: String, toDate: String) {
+        showLoading.value = true
+        viewModelScope.launch {
+            val result = if (fromDate.isEmpty() || toDate.isEmpty()) {
+                bloodPressureRepository.getAllRecords()
+            } else {
+                bloodPressureRepository.getRecordsByDate(fromDate, toDate)
             }
-            false -> {
-                Transformations.map(bloodPressureRepository.getRecordsByDate(fromDate, toDate)) {
-                    it.asDomainModel()
+            showLoading.postValue(false)
+            when (result) {
+                is Result.Success<*> -> {
+                    val data = result.data as List<BloodPressureDTO>
+                    bloodPressureValues.value = data.asDomainModel()
                 }
+                is Result.Error ->
+                    showSnackBar.value = result.message
             }
-        }
-
-    }
-
-    private fun setAllRecords() {
-        bloodPressureValues = Transformations.map(bloodPressureRepository.getAllRecords()) {
-            it.asDomainModel()
+            invalidateShowNoData()
         }
     }
 
-    private fun setRecordsByDate(fromDate: String, toDate: String) {
-        bloodPressureValues = Transformations.map(bloodPressureRepository.getRecordsByDate(fromDate, toDate)) {
-            it.asDomainModel()
-        }
-    }
-
-    fun updateFilter(filter: BloodPressureFilter, selectedFromDate: String? = null, selectedToDate: String? = null) : Boolean {
+    fun updateFilter(item: MenuItem, customFromDate: String? = null, customToDate: String? = null) {
         val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd")
         val cal = Calendar.getInstance()
         cal.add(Calendar.DATE, 0)
         val today = dateFormat.format(cal.time)
-        when (filter) {
-            BloodPressureFilter.SHOW_ALL -> {
-                setAllRecords()
+        when (item.itemId) {
+            R.id.custom -> {
+                fromDate = customFromDate!!
+                toDate = customToDate!!
+            }
+            R.id.all_records -> {
                 fromDate = ""
                 toDate = ""
-                return true
             }
-            BloodPressureFilter.SHOW_TODAY -> {
+            R.id.today -> {
                 fromDate = today
                 toDate = today
             }
-            BloodPressureFilter.SHOW_YESTERDAY -> {
+            R.id.yesterday -> {
                 cal.add(Calendar.DATE, -1)
                 val yesterday = dateFormat.format(cal.time)
                 fromDate = yesterday
                 toDate = yesterday
             }
-            BloodPressureFilter.SHOW_LAST_7_DAYS -> {
+            R.id.last_7_days -> {
                 cal.add(Calendar.DATE, -7)
                 val sevenDaysBefore = dateFormat.format(cal.time)
                 fromDate = sevenDaysBefore
                 toDate = today
             }
-            BloodPressureFilter.SHOW_LAST_14_DAYS -> {
+            R.id.last_14_days -> {
                 cal.add(Calendar.DATE, -14)
                 val fourteenDaysBefore = dateFormat.format(cal.time)
                 fromDate = fourteenDaysBefore
                 toDate = today
             }
-            BloodPressureFilter.SHOW_LAST_30_DAYS -> {
+            R.id.last_30_days -> {
                 cal.add(Calendar.DATE, -30)
                 val thirtyDaysBefore = dateFormat.format(cal.time)
                 fromDate = thirtyDaysBefore
                 toDate = today
             }
-            BloodPressureFilter.SHOW_LAST_60_DAYS -> {
+            R.id.last_60_days -> {
                 cal.add(Calendar.DATE, -60)
                 val sixtyDaysBefore = dateFormat.format(cal.time)
                 fromDate = sixtyDaysBefore
                 toDate = today
             }
-            BloodPressureFilter.SHOW_LAST_90_DAYS -> {
+            R.id.last_90_days -> {
                 cal.add(Calendar.DATE, -90)
                 val ninetyDaysBefore = dateFormat.format(cal.time)
                 fromDate = ninetyDaysBefore
                 toDate = today
             }
-            BloodPressureFilter.SHOW_CUSTOM -> {
-                fromDate = selectedFromDate!!
-                toDate = selectedToDate!!
-            }
-
         }
-
-        setRecordsByDate(fromDate, toDate)
-        return true
+        setAllRecords(fromDate, toDate)
     }
 
-    fun displayEditBloodPressure(bloodPressure: BloodPressure?) {
-        _navigateToSelectedBloodPressure.value = bloodPressure
+    private fun invalidateShowNoData() {
+        showNoData.value = bloodPressureValues.value == null || bloodPressureValues.value!!.isEmpty()
     }
 }

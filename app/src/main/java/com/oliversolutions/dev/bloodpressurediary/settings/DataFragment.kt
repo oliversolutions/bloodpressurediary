@@ -11,12 +11,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.oliversolutions.dev.bloodpressurediary.R
 import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDatabase
 import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentDataBinding
@@ -27,22 +24,19 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import android.Manifest
 import androidx.core.content.ContextCompat.checkSelfPermission
+import com.oliversolutions.dev.bloodpressurediary.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DataFragment : Fragment() {
+class DataFragment : BaseFragment() {
     private lateinit var binding: FragmentDataBinding
-    val viewModel: DataViewModel by viewModel()
+    override val _viewModel: DataViewModel by viewModel()
 
-    val requestPermissionLauncher =
+    private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 restoreBackup()
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.grant_this_permission),
-                    Toast.LENGTH_LONG
-                ).show()
+                _viewModel.showToast.value = getString(R.string.grant_this_permission)
             }
         }
 
@@ -63,25 +57,20 @@ class DataFragment : Fragment() {
                     .onWorkFinishListener { success, _ ->
                         newFile.delete()
                         if (success) {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.data_successfully_restored),
-                                Toast.LENGTH_LONG
-                            ).show()
+                            _viewModel.showToast.value = getString(R.string.data_successfully_restored)
                         } else {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.error_ocurred),
-                                Toast.LENGTH_LONG
-                            ).show()
+                            _viewModel.showToast.value = getString(R.string.error_ocurred)
                         }
-                    }
-                    .execute()
+                    }.execute()
             }
         }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_data, container, false
         )
@@ -90,23 +79,22 @@ class DataFragment : Fragment() {
         binding.createBackupLinearLayout.setOnClickListener {
             createBackup()
         }
-
         binding.deleteDataLinearLayout.setOnClickListener {
             AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.confirm_delete_data))
                 .setNegativeButton(getString(R.string.no), null)
                 .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                    viewModel.clear()
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.successfully_deleted),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    _viewModel.clear()
+                    _viewModel.showToast.value = getString(R.string.successfully_deleted)
                 }.show()
         }
 
         binding.restoreBackupLinearLayout.setOnClickListener {
-            if (checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 restoreBackup()
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -120,7 +108,6 @@ class DataFragment : Fragment() {
             .setType("*/*")
             .setAction(Intent.ACTION_GET_CONTENT)
         resultLauncher.launch(intent)
-
     }
 
     private fun createBackup() {
@@ -150,11 +137,7 @@ class DataFragment : Fragment() {
                     sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
                     startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)))
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.error_ocurred),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    _viewModel.showToast.value = getString(R.string.error_ocurred)
                 }
             }.execute()
     }

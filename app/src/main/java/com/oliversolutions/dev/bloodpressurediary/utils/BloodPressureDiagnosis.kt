@@ -1,5 +1,4 @@
-package com.oliversolutions.dev.bloodpressurediary
-
+package com.oliversolutions.dev.bloodpressurediary.utils
 
 sealed class BloodPressureDiagnosis {
     object Stage2 : BloodPressureDiagnosis()

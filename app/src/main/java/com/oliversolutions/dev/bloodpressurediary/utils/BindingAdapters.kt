@@ -1,10 +1,12 @@
-package com.oliversolutions.dev.bloodpressurediary
+package com.oliversolutions.dev.bloodpressurediary.utils
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.oliversolutions.dev.bloodpressurediary.R
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -15,7 +17,6 @@ import java.util.*
 @SuppressLint("SetTextI18n", "SimpleDateFormat")
 @BindingAdapter(value= ["fromDate", "toDate"], requireAll = false)
 fun bindFromDateToDate(textView: TextView, fromDate: String, toDate: String) {
-
     if (fromDate.isEmpty() || toDate.isEmpty()) {
         textView.text = textView.context.getString(R.string.all_records)
     } else if (fromDate.isNotEmpty() && toDate.isNotEmpty()){
@@ -102,3 +103,24 @@ fun bindImageDiastolicSystolic(imageView: ImageView, imgDiastolic: String, imgSy
         }
     }
 }
+
+/**
+ * Use this binding adapter to show and hide the views using boolean variables
+ */
+@BindingAdapter("android:fadeVisible")
+fun setFadeVisible(view: View, visible: Boolean? = true) {
+    if (view.tag == null) {
+        view.tag = true
+        view.visibility = if (visible == true) View.VISIBLE else View.GONE
+    } else {
+        view.animate().cancel()
+        if (visible == true) {
+            if (view.visibility == View.GONE)
+                view.fadeIn()
+        } else {
+            if (view.visibility == View.VISIBLE)
+                view.fadeOut()
+        }
+    }
+}
+

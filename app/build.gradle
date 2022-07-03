@@ -107,4 +107,8 @@ dependencies {
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
 
+    // Espresso
+    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
+
+
 }

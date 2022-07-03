@@ -22,7 +22,7 @@
     <data>
         <variable
             name="bloodPressure"
-            type="com.oliversolutions.dev.bloodpressurediary.BloodPressure" />
+            type="com.oliversolutions.dev.bloodpressurediary.main.BloodPressure" />
     </data>
 
 

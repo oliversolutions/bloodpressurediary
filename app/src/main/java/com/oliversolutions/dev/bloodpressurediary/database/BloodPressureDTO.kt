@@ -3,7 +3,7 @@ package com.oliversolutions.dev.bloodpressurediary.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.oliversolutions.dev.bloodpressurediary.BloodPressure
+import com.oliversolutions.dev.bloodpressurediary.main.BloodPressure
 
 @Entity(tableName = "high_pressure_table")
 data class BloodPressureDTO(
