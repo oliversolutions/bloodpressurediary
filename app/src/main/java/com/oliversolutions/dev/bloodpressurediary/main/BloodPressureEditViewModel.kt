@@ -62,6 +62,7 @@ class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: App
     }
 
     fun createNewBloodPressure(bloodPressure: BloodPressure) {
+        showLoading.value = true
         viewModelScope.launch {
             bloodPressureRepository.createNewBloodPressure(
                 BloodPressureDTO(
@@ -76,8 +77,10 @@ class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: App
                     null
                 )
             )
+            showLoading.value = false
             showToast.value = app.getString(R.string.blood_pressure_saved)
         }
+
     }
 
     fun editBloodPressure() {
