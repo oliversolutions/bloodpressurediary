@@ -105,6 +105,6 @@
     <string name="opinion_matters">Your opinion matters to us!</string>
     <string name="we_work_hard">We work super hard to serve you better and would love to know how would you rate our app?</string>
     <string name="rate_us_button">Rate Us</string>
-    <string name="blood_pressure_saved">Valor de presión arterial guardado!</string>
+    <string name="blood_pressure_saved">Blood pressure value saved!</string>
     <string name="record_removed">Record deleted!</string>
 </resources>

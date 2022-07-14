@@ -12,6 +12,7 @@ class BloodPressureRepository(
     private val database: BloodPressureDatabase,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BloodPressureDataSource {
+
     override suspend fun createNewBloodPressure(bloodPressureDTO: BloodPressureDTO) =
         wrapEspressoIdlingResource {
             withContext(ioDispatcher) {
@@ -49,7 +50,7 @@ class BloodPressureRepository(
         return database.bloodPressureDatabaseDao.getRecordsByDateInList(fromDate, toDate)
     }
 
-    override suspend fun deleteRecord(id: Int) {
+    override suspend fun deleteRecord(id: String) {
         wrapEspressoIdlingResource {
             withContext(ioDispatcher) {
                 database.bloodPressureDatabaseDao.deleteRecord(id)
@@ -64,4 +65,21 @@ class BloodPressureRepository(
             }
         }
     }
+
+    override suspend fun getBloodPressure(id: String): Result<BloodPressureDTO> = withContext(ioDispatcher) {
+        wrapEspressoIdlingResource {
+            try {
+                val bloodPressure = database.bloodPressureDatabaseDao.getBloodPressure(id)
+                if (bloodPressure != null) {
+                    return@withContext Result.Success(bloodPressure)
+                } else {
+                    return@withContext Result.Error("Blood pressure not found!")
+                }
+            } catch (e: Exception) {
+                return@withContext Result.Error(e.localizedMessage)
+            }
+        }
+    }
+
+
 }

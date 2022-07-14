@@ -28,7 +28,7 @@ import androidx.room.RoomDatabase
  * This pattern is pretty much the same for any database,
  * so you can reuse it.
  */
-@Database(entities = [BloodPressureDTO::class], version = 9, exportSchema = false)
+@Database(entities = [BloodPressureDTO::class], version = 11, exportSchema = false)
 abstract class BloodPressureDatabase : RoomDatabase() {
 
     /**
@@ -85,7 +85,7 @@ abstract class BloodPressureDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         BloodPressureDatabase::class.java,
-                        "high_pressure_database"
+                        "blood_pressure_database"
                     )
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about

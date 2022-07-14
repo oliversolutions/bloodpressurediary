@@ -4,8 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.oliversolutions.dev.bloodpressurediary.main.BloodPressure
+import java.util.*
 
-@Entity(tableName = "high_pressure_table")
+@Entity(tableName = "blood_pressure_table")
 data class BloodPressureDTO(
     @ColumnInfo(name = "systolic")
     var systolic: Double?,
@@ -25,10 +26,7 @@ data class BloodPressureDTO(
     var averageSystolic: String?,
     @ColumnInfo(name = "average_pulse")
     var averagePulse: String?,
-
-
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0
+    @PrimaryKey val id: String = UUID.randomUUID().toString()
     )
 
 fun List<BloodPressureDTO>.asDomainModel(): List<BloodPressure> {

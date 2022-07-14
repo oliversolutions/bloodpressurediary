@@ -9,6 +9,7 @@ interface BloodPressureDataSource {
     suspend fun getAllRecords(): Result<List<BloodPressureDTO>>
     suspend fun getRecordsByDate(fromDate: String, toDate: String): Result<List<BloodPressureDTO>>
     suspend fun getRecordsByDateInList(fromDate: String, toDate: String): List<BloodPressureDTO>
-    suspend fun deleteRecord(id: Int)
+    suspend fun deleteRecord(id: String)
     suspend fun clear()
+    suspend fun getBloodPressure(id: String) : Result<BloodPressureDTO>
 }

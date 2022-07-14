@@ -7,7 +7,7 @@ import java.util.LinkedHashMap
 
 class FakeDataSource : BloodPressureDataSource {
 
-    var bloodPressureData: LinkedHashMap<Long, BloodPressureDTO> = LinkedHashMap()
+    var bloodPressureData: LinkedHashMap<String, BloodPressureDTO> = LinkedHashMap()
 
     override suspend fun createNewBloodPressure(bloodPressure: BloodPressureDTO) {
         bloodPressureData[bloodPressure.id] = bloodPressure
@@ -28,14 +28,11 @@ class FakeDataSource : BloodPressureDataSource {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getRecordsByDateInList(
-        fromDate: String,
-        toDate: String
-    ): List<BloodPressureDTO> {
+    override suspend fun getRecordsByDateInList(fromDate: String, toDate: String): List<BloodPressureDTO> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteRecord(id: Int) {
+    override suspend fun deleteRecord(id: String) {
         TODO("Not yet implemented")
     }
 
@@ -43,4 +40,7 @@ class FakeDataSource : BloodPressureDataSource {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getBloodPressure(id: String): Result<BloodPressureDTO> {
+        TODO("Not yet implemented")
+    }
 }

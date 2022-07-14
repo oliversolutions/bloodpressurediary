@@ -16,7 +16,6 @@
 
 package com.oliversolutions.dev.bloodpressurediary.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 
 /**
@@ -31,37 +30,37 @@ interface BloodPressureDatabaseDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(bloodPressureDTO: BloodPressureDTO)
 
-    @Query("SELECT * from high_pressure_table WHERE id = :key")
+    @Query("SELECT * from blood_pressure_table WHERE id = :key")
     suspend fun get(key: Int): BloodPressureDTO?
 
     @Query("SELECT a.id,a.systolic, a.diastolic, a.pulse, a.notes, a.creation_time, a.creation_date ,\n" +
-            "(SELECT SUM(diastolic)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_diastolic, \n" +
-            "(SELECT SUM(systolic)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_systolic,\n" +
-            "(SELECT SUM(pulse)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_pulse\n  " +
-            "FROM high_pressure_table a WHERE a.creation_date >= :fromDate AND a.creation_date <= :toDate ORDER BY a.creation_date DESC")
+            "(SELECT SUM(diastolic)/COUNT(creation_date) FROM blood_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_diastolic, \n" +
+            "(SELECT SUM(systolic)/COUNT(creation_date) FROM blood_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_systolic,\n" +
+            "(SELECT SUM(pulse)/COUNT(creation_date) FROM blood_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_pulse\n  " +
+            "FROM blood_pressure_table a WHERE a.creation_date >= :fromDate AND a.creation_date <= :toDate ORDER BY a.creation_date DESC")
     fun getRecordsByDate(fromDate: String, toDate: String): List<BloodPressureDTO>
 
 
-    @Query("SELECT * FROM high_pressure_table WHERE creation_date >= :fromDate AND creation_date <= :toDate ORDER BY creation_date DESC")
+    @Query("SELECT * FROM blood_pressure_table WHERE creation_date >= :fromDate AND creation_date <= :toDate ORDER BY creation_date DESC")
     suspend fun getRecordsByDateInList(fromDate: String, toDate: String): List<BloodPressureDTO>
 
-    @Query("DELETE FROM high_pressure_table")
+    @Query("DELETE FROM blood_pressure_table")
     suspend fun clear()
 
-    @Query("DELETE FROM high_pressure_table WHERE id = :key")
-    suspend fun deleteRecord(key: Int)
+    @Query("DELETE FROM blood_pressure_table WHERE id = :key")
+    suspend fun deleteRecord(key: String)
 
     @Query("SELECT a.id,a.systolic, a.diastolic, a.pulse, a.notes, a.creation_time, a.creation_date ,\n" +
-            "(SELECT SUM(diastolic)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_diastolic, \n" +
-            "(SELECT SUM(systolic)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_systolic,\n" +
-            "(SELECT SUM(pulse)/COUNT(creation_date) FROM high_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_pulse\n " +
-            "FROM high_pressure_table a ORDER BY a.creation_date DESC")
+            "(SELECT SUM(diastolic)/COUNT(creation_date) FROM blood_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_diastolic, \n" +
+            "(SELECT SUM(systolic)/COUNT(creation_date) FROM blood_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_systolic,\n" +
+            "(SELECT SUM(pulse)/COUNT(creation_date) FROM blood_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_pulse\n " +
+            "FROM blood_pressure_table a ORDER BY a.creation_date DESC")
      suspend fun getAllRecords(): List<BloodPressureDTO>
 
-    @Query("SELECT * FROM high_pressure_table ORDER BY id DESC LIMIT 1")
+    @Query("SELECT * FROM blood_pressure_table ORDER BY id DESC LIMIT 1")
     suspend fun getLastRecord(): BloodPressureDTO?
 
-    @Query("SELECT * from high_pressure_table WHERE id = :key")
-    fun getHighPressureWithId(key: Int): LiveData<BloodPressureDTO>
+    @Query("SELECT * from blood_pressure_table WHERE id = :key")
+    fun getBloodPressure(key: String): BloodPressureDTO
 }
 

@@ -2,6 +2,7 @@ package com.oliversolutions.dev.bloodpressurediary.main
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 data class BloodPressure(
@@ -11,7 +12,7 @@ data class BloodPressure(
     val notes: String?,
     val creationTime: String?,
     val creationDate: String?,
-    val averageDiastolic: String?,
-    val averageSystolic: String?,
-    val averagePulse: String?,
-    val id: Long = 0) : Parcelable
+    val averageDiastolic: String? = null,
+    val averageSystolic: String? = null,
+    val averagePulse: String? = null,
+    val id: String = UUID.randomUUID().toString()) : Parcelable

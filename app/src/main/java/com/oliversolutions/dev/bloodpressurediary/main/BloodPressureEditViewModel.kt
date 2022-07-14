@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.oliversolutions.dev.bloodpressurediary.R
 import com.oliversolutions.dev.bloodpressurediary.base.BaseViewModel
+import com.oliversolutions.dev.bloodpressurediary.base.NavigationCommand
 import com.oliversolutions.dev.bloodpressurediary.database.BloodPressureDTO
 import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureDataSource
 import kotlinx.coroutines.launch
@@ -38,8 +39,6 @@ class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: App
             SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(System.currentTimeMillis()))
         }
     )
-    private var bloodPressureId: Long = 0
-
     init {
         if (bloodPressure != null) {
             systolic.value = bloodPressure.systolic?.toInt()
@@ -50,14 +49,16 @@ class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: App
             }
             creationDate.value = bloodPressure.creationDate!!
             creationTime.value = bloodPressure.creationTime!!
-            bloodPressureId = bloodPressure.id
         }
     }
 
     fun deleteRecord() {
         viewModelScope.launch {
-            bloodPressureRepository.deleteRecord(bloodPressureId.toInt())
-            showToast.value = app.getString(R.string.record_removed)
+            bloodPressure?.let {
+                bloodPressureRepository.deleteRecord(it.id)
+                showToast.value = app.getString(R.string.record_removed)
+            }
+            navigationCommand.value = NavigationCommand.To(BloodPressureEditFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
         }
     }
 
@@ -79,27 +80,31 @@ class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: App
             )
             showLoading.value = false
             showToast.value = app.getString(R.string.blood_pressure_saved)
-        }
+            navigationCommand.value = NavigationCommand.To(BloodPressureEditFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
 
+        }
     }
 
     fun editBloodPressure() {
         viewModelScope.launch {
-            bloodPressureRepository.editBloodPressure(
-                BloodPressureDTO(
-                    systolic.value?.toDouble(),
-                    diastolic.value?.toDouble(),
-                    pulse.value?.toDouble(),
-                    notes.value,
-                    creationTime.value,
-                    creationDate.value,
-                    null,
-                    null,
-                    null,
-                    bloodPressureId
+            bloodPressure?.let {
+                bloodPressureRepository.editBloodPressure(
+                    BloodPressureDTO(
+                        systolic.value?.toDouble(),
+                        diastolic.value?.toDouble(),
+                        pulse.value?.toDouble(),
+                        notes.value,
+                        creationTime.value,
+                        creationDate.value,
+                        null,
+                        null,
+                        null,
+                        bloodPressure.id
+                    )
                 )
-            )
+            }
             showToast.value = app.getString(R.string.blood_pressure_saved)
+            navigationCommand.value = NavigationCommand.To(BloodPressureEditFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
         }
     }
 }

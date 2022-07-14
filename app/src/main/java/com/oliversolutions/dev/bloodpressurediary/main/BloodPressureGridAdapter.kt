@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.oliversolutions.dev.bloodpressurediary.databinding.BloodPressureViewItemBinding
 import com.oliversolutions.dev.bloodpressurediary.databinding.HeaderBinding
 import com.oliversolutions.dev.bloodpressurediary.databinding.SubHeaderBinding
+import java.util.*
 
 const val ITEM_VIEW_TYPE_HEADER = 0
 const val ITEM_VIEW_TYPE_ITEM = 1
@@ -81,7 +82,7 @@ class BloodPressureGridAdapter(private val onClickListener: OnClickListener) : L
                 newDate = highPressureItem.creationDate!!
                 items += listOf(DataItem.SubHeader(newDate, highPressureItem.averageSystolic!!, highPressureItem.averageDiastolic!!, highPressureItem.averagePulse!!))
             }
-            items += listOf(DataItem.HighPressureItem(highPressureItem))
+            items += listOf(DataItem.BloodPressureItem(highPressureItem))
         }
         submitList(items)
     }
@@ -89,7 +90,7 @@ class BloodPressureGridAdapter(private val onClickListener: OnClickListener) : L
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is DataItem.Header -> ITEM_VIEW_TYPE_HEADER
-            is DataItem.HighPressureItem -> ITEM_VIEW_TYPE_ITEM
+            is DataItem.BloodPressureItem -> ITEM_VIEW_TYPE_ITEM
             is DataItem.SubHeader -> ITEM_VIEW_TYPE_SUB_HEADER
 
         }
@@ -118,7 +119,7 @@ class BloodPressureGridAdapter(private val onClickListener: OnClickListener) : L
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is HighPressureViewHolder -> {
-                val highPressureItem = getItem(position) as DataItem.HighPressureItem
+                val highPressureItem = getItem(position) as DataItem.BloodPressureItem
                 holder.bind(highPressureItem.bloodPressure)
                 holder.itemView.setOnClickListener {
                     onClickListener.onClick(highPressureItem.bloodPressure)
@@ -137,19 +138,15 @@ class BloodPressureGridAdapter(private val onClickListener: OnClickListener) : L
 }
 
 sealed class DataItem {
-
-    data class HighPressureItem(val bloodPressure: BloodPressure): DataItem() {
-        override val id: Long = bloodPressure.id
+    data class BloodPressureItem(val bloodPressure: BloodPressure): DataItem() {
+        override val id: String = bloodPressure.id
     }
-
     data class Header(val fromDate: String, val toDate: String, val numRecords: Int): DataItem() {
-        override val id = Long.MIN_VALUE
+        override val id = UUID.randomUUID().toString()
     }
-
     data class SubHeader(val date: String, val averageSystolic: String, val averageDiastolic: String, val averagePulse: String): DataItem() {
-        override val id = Long.MIN_VALUE
+        override val id = UUID.randomUUID().toString()
     }
-
-    abstract val id: Long
+    abstract val id: String
 }
 

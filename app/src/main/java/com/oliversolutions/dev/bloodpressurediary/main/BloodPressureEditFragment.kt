@@ -274,7 +274,6 @@ class BloodPressureEditFragment : BaseFragment() {
                 _viewModel.createNewBloodPressure(highPressure)
             }
         }
-        _viewModel.navigationCommand.value = NavigationCommand.To(BloodPressureEditFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
         return true
     }
 }

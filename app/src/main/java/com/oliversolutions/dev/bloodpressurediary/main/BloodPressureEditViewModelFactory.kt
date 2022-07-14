@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureDataSource
 
+
 class BloodPressureEditViewModelFactory(
     private val bloodPressure: BloodPressure?,
     private val application: Application,
