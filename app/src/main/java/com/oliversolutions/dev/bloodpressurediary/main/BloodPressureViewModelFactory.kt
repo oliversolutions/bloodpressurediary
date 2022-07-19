@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureDataSource
 
 
-class BloodPressureEditViewModelFactory(
+class BloodPressureViewModelFactory(
     private val bloodPressure: BloodPressure?,
     private val application: Application,
     private val bloodPressureRepository: BloodPressureDataSource) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(BloodPressureEditViewModel::class.java)) {
-            return BloodPressureEditViewModel(bloodPressure, application, bloodPressureRepository) as T
+        if (modelClass.isAssignableFrom(BloodPressureViewModel::class.java)) {
+            return BloodPressureViewModel(bloodPressure, application, bloodPressureRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

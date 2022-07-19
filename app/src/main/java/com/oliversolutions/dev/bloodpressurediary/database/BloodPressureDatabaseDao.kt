@@ -18,9 +18,6 @@ package com.oliversolutions.dev.bloodpressurediary.database
 
 import androidx.room.*
 
-/**
- * Defines methods for using the SleepNight class with Room.
- */
 @Dao
 interface BloodPressureDatabaseDao {
 
@@ -39,7 +36,6 @@ interface BloodPressureDatabaseDao {
             "(SELECT SUM(pulse)/COUNT(creation_date) FROM blood_pressure_table WHERE creation_date = a.creation_date GROUP BY creation_date) AS average_pulse\n  " +
             "FROM blood_pressure_table a WHERE a.creation_date >= :fromDate AND a.creation_date <= :toDate ORDER BY a.creation_date DESC")
     fun getRecordsByDate(fromDate: String, toDate: String): List<BloodPressureDTO>
-
 
     @Query("SELECT * FROM blood_pressure_table WHERE creation_date >= :fromDate AND creation_date <= :toDate ORDER BY creation_date DESC")
     suspend fun getRecordsByDateInList(fromDate: String, toDate: String): List<BloodPressureDTO>

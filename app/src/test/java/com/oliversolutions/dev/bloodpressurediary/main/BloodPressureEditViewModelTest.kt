@@ -15,10 +15,10 @@ import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class BloodPressureEditViewModelTest {
+class BloodPressureViewModelTest {
 
     private lateinit var fakeDataSource: FakeDataSource
-    private lateinit var bloodPressureEditViewModel: BloodPressureEditViewModel
+    private lateinit var bloodPressureViewModel: BloodPressureViewModel
 
     @ExperimentalCoroutinesApi
     @get:Rule
@@ -27,7 +27,7 @@ class BloodPressureEditViewModelTest {
     @Before
     fun setupBloodPressureEditViewModel() {
         fakeDataSource = FakeDataSource()
-        bloodPressureEditViewModel = BloodPressureEditViewModel(null, ApplicationProvider.getApplicationContext(), fakeDataSource)
+        bloodPressureViewModel = BloodPressureViewModel(null, ApplicationProvider.getApplicationContext(), fakeDataSource)
     }
 
     @Test
@@ -41,14 +41,14 @@ class BloodPressureEditViewModelTest {
             "11:38",
             "2022-07-22"
         )
-        bloodPressureEditViewModel.createNewBloodPressure(bloodPressureData)
+        bloodPressureViewModel.createNewBloodPressure(bloodPressureData)
         MatcherAssert.assertThat(
-            bloodPressureEditViewModel.showLoading.getOrAwaitValue(),
+            bloodPressureViewModel.showLoading.getOrAwaitValue(),
             CoreMatchers.`is`(true)
         )
         mainCoroutineRule.resumeDispatcher()
         MatcherAssert.assertThat(
-            bloodPressureEditViewModel.showLoading.getOrAwaitValue(),
+            bloodPressureViewModel.showLoading.getOrAwaitValue(),
             CoreMatchers.`is`(false)
         )
     }

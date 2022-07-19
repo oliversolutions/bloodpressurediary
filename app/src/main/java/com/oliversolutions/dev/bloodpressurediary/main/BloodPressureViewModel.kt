@@ -19,7 +19,7 @@ const val DEFAULT_SYSTOLIC = 120
 const val DEFAULT_DIASTOLIC = 65
 const val DEFAULT_PULSE = 60
 
-class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: Application, private val bloodPressureRepository: BloodPressureDataSource) : BaseViewModel(app) {
+class BloodPressureViewModel(val bloodPressure: BloodPressure?, val app: Application, private val bloodPressureRepository: BloodPressureDataSource) : BaseViewModel(app) {
 
     val systolic = MutableLiveData(DEFAULT_SYSTOLIC)
     val diastolic = MutableLiveData(DEFAULT_DIASTOLIC)
@@ -58,7 +58,7 @@ class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: App
                 bloodPressureRepository.deleteRecord(it.id)
                 showToast.value = app.getString(R.string.record_removed)
             }
-            navigationCommand.value = NavigationCommand.To(BloodPressureEditFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
+            navigationCommand.value = NavigationCommand.To(BloodPressureFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
         }
     }
 
@@ -80,7 +80,7 @@ class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: App
             )
             showLoading.value = false
             showToast.value = app.getString(R.string.blood_pressure_saved)
-            navigationCommand.value = NavigationCommand.To(BloodPressureEditFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
+            navigationCommand.value = NavigationCommand.To(BloodPressureFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
 
         }
     }
@@ -104,7 +104,7 @@ class BloodPressureEditViewModel(val bloodPressure: BloodPressure?, val app: App
                 )
             }
             showToast.value = app.getString(R.string.blood_pressure_saved)
-            navigationCommand.value = NavigationCommand.To(BloodPressureEditFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
+            navigationCommand.value = NavigationCommand.To(BloodPressureFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
         }
     }
 }

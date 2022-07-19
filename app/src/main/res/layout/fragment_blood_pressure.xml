@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.oliversolutions.dev.bloodpressurediary.main.BloodPressureEditViewModel" />
+            type="com.oliversolutions.dev.bloodpressurediary.main.BloodPressureViewModel" />
     </data>
 
     <ScrollView

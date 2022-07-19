@@ -7,11 +7,10 @@ import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentBloodPressureEditBinding
 import com.google.android.material.button.MaterialButton
 import com.oliversolutions.dev.bloodpressurediary.*
 import com.oliversolutions.dev.bloodpressurediary.base.BaseFragment
-import com.oliversolutions.dev.bloodpressurediary.base.NavigationCommand
+import com.oliversolutions.dev.bloodpressurediary.databinding.FragmentBloodPressureBinding
 import com.oliversolutions.dev.bloodpressurediary.repository.BloodPressureRepository
 import com.oliversolutions.dev.bloodpressurediary.utils.BloodPressureDiagnosis
 import com.oliversolutions.dev.bloodpressurediary.utils.getBloodPressureDiagnosis
@@ -23,19 +22,19 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class BloodPressureEditFragment : BaseFragment() {
-    private lateinit var binding: FragmentBloodPressureEditBinding
-    override lateinit var _viewModel: BloodPressureEditViewModel
+class BloodPressureFragment : BaseFragment() {
+    private lateinit var binding: FragmentBloodPressureBinding
+    override lateinit var _viewModel: BloodPressureViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_blood_pressure_edit, container, false
+            inflater, R.layout.fragment_blood_pressure, container, false
         )
         binding.lifecycleOwner = this
-        val viewModelFactory = BloodPressureEditViewModelFactory(
-           BloodPressureEditFragmentArgs.fromBundle(requireArguments()).bloodPressure, requireActivity().application, BloodPressureRepository(get())
+        val viewModelFactory = BloodPressureViewModelFactory(
+           BloodPressureFragmentArgs.fromBundle(requireArguments()).bloodPressure, requireActivity().application, BloodPressureRepository(get())
         )
-        _viewModel = ViewModelProvider(this, viewModelFactory).get(BloodPressureEditViewModel::class.java)
+        _viewModel = ViewModelProvider(this, viewModelFactory).get(BloodPressureViewModel::class.java)
         binding.viewModel = _viewModel
         configureLayout()
         return binding.root
@@ -274,6 +273,6 @@ class BloodPressureEditFragment : BaseFragment() {
                 _viewModel.createNewBloodPressure(highPressure)
             }
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 }
