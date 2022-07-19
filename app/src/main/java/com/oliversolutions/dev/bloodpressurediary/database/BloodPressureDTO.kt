@@ -21,11 +21,11 @@ data class BloodPressureDTO(
     @ColumnInfo(name = "creation_date")
     var creationDate: String?,
     @ColumnInfo(name = "average_diastolic")
-    var averageDiastolic: String?,
+    var averageDiastolic: String? = null,
     @ColumnInfo(name = "average_systolic")
-    var averageSystolic: String?,
+    var averageSystolic: String? = null,
     @ColumnInfo(name = "average_pulse")
-    var averagePulse: String?,
+    var averagePulse: String? = null,
     @PrimaryKey val id: String = UUID.randomUUID().toString()
     )
 

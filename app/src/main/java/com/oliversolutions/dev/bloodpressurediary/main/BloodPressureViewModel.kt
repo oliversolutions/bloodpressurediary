@@ -15,9 +15,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-const val DEFAULT_SYSTOLIC = 120
-const val DEFAULT_DIASTOLIC = 65
-const val DEFAULT_PULSE = 60
 
 class BloodPressureViewModel(val bloodPressure: BloodPressure?, val app: Application, private val bloodPressureRepository: BloodPressureDataSource) : BaseViewModel(app) {
 
@@ -25,6 +22,7 @@ class BloodPressureViewModel(val bloodPressure: BloodPressure?, val app: Applica
     val diastolic = MutableLiveData(DEFAULT_DIASTOLIC)
     val pulse = MutableLiveData(DEFAULT_PULSE)
     val notes = MutableLiveData<String>()
+
     val creationDate = MutableLiveData(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
@@ -47,8 +45,8 @@ class BloodPressureViewModel(val bloodPressure: BloodPressure?, val app: Applica
             if (bloodPressure.notes != null) {
                 notes.value = bloodPressure.notes!!
             }
-            creationDate.value = bloodPressure.creationDate!!
-            creationTime.value = bloodPressure.creationTime!!
+            creationDate.value = bloodPressure.creationDate
+            creationTime.value = bloodPressure.creationTime
         }
     }
 
@@ -72,11 +70,8 @@ class BloodPressureViewModel(val bloodPressure: BloodPressure?, val app: Applica
                     bloodPressure.pulse,
                     bloodPressure.notes,
                     bloodPressure.creationTime,
-                    bloodPressure.creationDate,
-                    null,
-                    null,
-                    null
-                )
+                    bloodPressure.creationDate
+                 )
             )
             showLoading.value = false
             showToast.value = app.getString(R.string.blood_pressure_saved)
@@ -106,5 +101,11 @@ class BloodPressureViewModel(val bloodPressure: BloodPressure?, val app: Applica
             showToast.value = app.getString(R.string.blood_pressure_saved)
             navigationCommand.value = NavigationCommand.To(BloodPressureFragmentDirections.actionHighPressureEditFragmentToNavigationHome())
         }
+    }
+
+    companion object {
+        const val DEFAULT_SYSTOLIC = 120
+        const val DEFAULT_DIASTOLIC = 65
+        const val DEFAULT_PULSE = 60
     }
 }
